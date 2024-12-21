@@ -13,16 +13,10 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 public class Controller {
-//   static long THINKING_PERIOD = 9000; // in ms
-//   static long WAIT_PERIOD = 50; // in ms
-//   WaitingThread waitingThread = new WaitingThread();
-//   ProcessingThread processingThread = new ProcessingThread();
 
    static boolean moveLock = false;
    static Move myNextMove = new Move(Square.A1, Square.A1, -2);  
-   
-//   public static boolean timeUp = false;
-//   static boolean startTimerNow = false;
+
    static boolean opponentsMovePending = false;  // Rx move and haven't processed it yet
    
    static boolean waitingForOpponent = false; // Opponent is still thinking
@@ -37,166 +31,24 @@ public class Controller {
    boolean stillInOpenings = true;
    BlackOpeningBook blackOpenings;
    WhiteOpeningBook whiteOpenings;
-//   static DatagramSocket sending_dsocket;
-//   static DatagramSocket receiving_dsocket;
-//   static int TxPortNumber;
-//   static InetAddress board_addr;
-   public static final String black_Move_Prefix = "Black_move:";
-   public static final String white_Move_Prefix = "White_move:";
+
+//   public static final String black_Move_Prefix = "Black_move:";
+//   public static final String white_Move_Prefix = "White_move:";
    
    public Controller(final Board theBoard,
                      final MoveFinder moveFinder,
                      final MovesRecord gameMoves)
-   //                     final DatagramSocket sending_dsocket, final DatagramSocket receiving_dsocket,
-   //                  final InetAddress board_addr,
-   //                  final int TxPortNumber)
    {
      this.theBoard = theBoard;
      this.moveFinder = moveFinder;
      this.gameMoves = gameMoves;
      this.blackOpenings = new BlackOpeningBook(theBoard);
      this.whiteOpenings = new WhiteOpeningBook(theBoard);
-    // this.sending_dsocket = sending_dsocket;
-    // this.receiving_dsocket = receiving_dsocket;
-    // this.board_addr = board_addr;
-    // this.TxPortNumber = TxPortNumber;
    }
 
-
-   /*
-    ** Waits for lock on move, then sets value
-    */
-/*   static public void setMove(Move newMove)
-   {
-      try
-      {
-         while(moveLock)
-         {
-           Thread.sleep(WAIT_PERIOD, 0);
-           System.out.println("Finishing calculateMove");
-         }
-     myNextMove.set(newMove);
-      } 
-      catch(java.lang.InterruptedException exc)
-      {
-        System.out.println("Exception caught in sleep call");
-      }
-   }
-*/
-/*   private class WaitingThread extends java.lang.Thread
-   {
-      public void run()
-      {
-         System.out.println("In WaitingThread::run");
-
-         try
-         {
-            for(;;)
-            {
-               while(!startTimerNow)
-               {
-                  sleep(WAIT_PERIOD);
-               }
-
-               startTimerNow = false;
-
-               sleep(THINKING_PERIOD);
-               timeUp = true;
-
-               System.out.println("End timer");
-               
-               final Move myMove = new Move(getMove() );
-               System.out.println("In waiting thread: move is " + myMove);
-               
-               // Send move to board server:
-               // Format message:
-               String moveMsg;
-                  
-               moveMsg = myMove.toStringShort() + "<EOF>";
-                  
-//                  
-               byte[] buf = new byte[1000];
-               buf = moveMsg.getBytes();
-               System.out.println("Sending message:" + moveMsg);
-/*               DatagramPacket out = new DatagramPacket(buf, buf.length, board_addr, TxPortNumber);
-                  
-               try
-               {
-                  sending_dsocket.send(out);
-               }
-               catch(IOException exc)
-               {
-                  System.out.println("Error raised sending msg:" + exc);  
-               }
-
-//
-                  waitingForOpponent = true;
-                  
-                  // Make the move on our board too
-BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
-                  System.out.println("Posn after my move:\n" + theBoard); 
-                  myMoves.add(myMove);                                               
-            }
-         }
-         catch(java.lang.InterruptedException exc)
-         {
-             System.out.println("Exception caught!");
-         } 
-      }
-*/
-      /*
-       ** Waits for lock on move, then returns value
-       */
-/*      public Move getMove()
-      {
-         try
-         {
-            while(moveLock)
-            {
-               sleep(WAIT_PERIOD);
-System.out.println("Waiting for count lock");
-            }
-         }
-         catch(java.lang.InterruptedException exc)
-         { 
-System.out.println("Exception caught in sleep fn");
-         }
-         return myNextMove;
-     }
-     
-   }
-*/
-   
-/*   private class ProcessingThread extends java.lang.Thread
-   {
-      public void run()
-      {
-   
-         try
-         {
-            for(;;)
-            {
-               while(!opponentsMovePending)
-               {
-                  sleep(WAIT_PERIOD);
-               }
-//System.out.println("Starting thinking");
-*** calculateMove();
-            }
-        }
-        catch(java.lang.InterruptedException exc)
-        {
-System.out.println("Exception caught");
-
-        }
-
-      }
-*/
    
       private Move calculateMove() // throws java.lang.InterruptedException
       {
-         //opponentsMovePending = false;
-         
          System.out.println("In calculateMove");
 
          Square openingFrom = new Square();
@@ -228,7 +80,6 @@ System.out.println("Opening found. Using this move");
          }
          else
          {
-//            myNextMove 
             Move penultimateMove = Move.NullMove;
             
             if(myMoves.size() > 2)
@@ -243,17 +94,6 @@ System.out.println("Opening found. Using this move");
          return myNextMove;
       }
    
-/*   private void opponentsMoveMade()
-   {
-      opponentsMovePending = true;
-//      System.out.println("Should start timer now");
-      startTimerNow = true;
-       
-      // Wait until thinking finished
-      
-      timeUp = false;
-   } 
-*/
    public static boolean ParseInput(String input, int input_length, Square from, Square to, boolean blacksTurn)
    {
       int inputMarker = 0;
@@ -267,12 +107,10 @@ System.out.println("Opening found. Using this move");
       if( (colour.indexOf("hite") > 0) || (colour.indexOf("HITE") > 0) )
       {
         isBlackMove = false;
-//System.out.println("is not BlackMove");
       }
       else if( (colour.indexOf("lack") > 0) || (colour.indexOf("LACK") > 0) )
       {
         isBlackMove = true;
-//System.out.println("isBlackMove");
       }
       else
       {
@@ -299,7 +137,6 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       String fromRowUser;
       String toRowUser;
       
-      
       if(input.substring(COLOUR_SIZE + 2, COLOUR_SIZE + 3).equals("-") )
       {
          // Two digit from square
@@ -317,12 +154,12 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       
 //      String afterMarkerP1 = input.substring(inputMarker + 1, inputMarker + 2);
 
-      int sqBracketIdx = input.indexOf('<');
+      //int sqBracketIdx = input.indexOf('<');
 //System.out.println("sqBracketIdx:" + sqBracketIdx);
       int dashIdx = input.indexOf('-');
 //System.out.println("dashIdx:" + dashIdx);
 
-      if(sqBracketIdx > dashIdx + 3 )
+      if(input_length > dashIdx + 3 )
       {
 //System.out.println("2 digit row");
          toRowUser = input.substring(inputMarker, inputMarker + 2);
@@ -350,7 +187,8 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
 
    public void Go(boolean IAmBlack_param)
    {
-      System.out.println("In go");
+
+	  System.out.println("In go");
       iAmBlack = IAmBlack_param;
       
       Square opponentMoveFrom = new Square();
@@ -359,28 +197,13 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       if(iAmBlack)
       {
         System.out.println("Playing as black");
-  //      opponentsMovePending = true;
-  //      startTimerNow = true;
-  //      waitingForOpponent = false;
         System.out.println("In Go: opponentsMovePending:" + opponentsMovePending);
       }
       else
       {
         System.out.println("Playing as white");
-//        opponentsMovePending = false;
-//        startTimerNow = false;
-//        waitingForOpponent = true;
       }
        
-//      waitingThread.start();
-//      processingThread.start();
-      
-      //System.out.println("Waiting for opponent's move:");
-      //System.out.println("waitingForOpponent:" + waitingForOpponent);
-      
-      //byte[] buf = new byte[1000];
-      //DatagramPacket dgp = new DatagramPacket(buf, buf.length);
-      
       for(;;)
       {
     	 Move myMove = calculateMove();
@@ -389,37 +212,40 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
          System.out.println("Posn after my move:\n" + theBoard); 
          myMoves.add(myMove);                                               
     	 
-         System.out.println("Enter move in format 'white_move:f4-f2<EOF>':");
-         Scanner myObj = new Scanner(System.in); // Create a Scanner object
-
-         String userMove = myObj.nextLine(); // Read user input
-         System.out.println("Move is: " + userMove);            	
-        
-         /*if(userMove.startsWith("Black_Wins") || userMove.startsWith("White_Wins") )
+         boolean humanEnteredValidMove = false;
+         while(!humanEnteredValidMove)
          {
-           // Game over
-           System.out.println("Game over! Exiting");
-           return;
-         }*/
-         boolean isOpponentMove = ParseInput(userMove, userMove.length(),
+        	 System.out.println("Enter move in format 'white_move:f4-f2':");
+        	 Scanner myObj = new Scanner(System.in); // Create a Scanner object
+
+        	 String userMove = myObj.nextLine(); // Read user input
+        	 System.out.println("Move is: " + userMove);            	
+        
+        	 boolean isOpponentMove = ParseInput(userMove, userMove.length(),
                                                 opponentMoveFrom, opponentMoveTo, theBoard.isBlackMove);
             
-         if(!isOpponentMove)
-           continue;
+        	 if(!isOpponentMove)
+        	 {
+        		 System.out.println("***** Invalid turn - logic error");     
+        	 }
               
-//         waitingForOpponent = false;
-            
-         boolean validMove = 
+        	 boolean validMove = 
             		BoardUtils.makeMoveIfPossible(opponentMoveFrom, 
                                           opponentMoveTo,
                                           theBoard);     
         
-         if(!validMove)
-         {
+        	 if(!validMove)
+        	 {
             	//throw new Exception("Invalid move played");
-           System.out.println("***** Invalid move played");     
-         }
+        		 System.out.println("***** Invalid move played");     
+        	 }
+        	 else
+        	 {
+        		 humanEnteredValidMove = true;
+        	 }
+         } // end while
          
+         System.out.println("Posn after your move:\n" + theBoard); 
          if(stillInOpenings)
          {                                  
             if(iAmBlack)
@@ -431,16 +257,7 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
                 whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
             }
           }
-
-//            System.out.println("After opponent's move:\n" + theBoard);     
-         
-           // opponentsMoveMade();          
-       }
-       /*catch(java.lang.StringIndexOutOfBoundsException exc)
-       {
-          System.out.println("Exception raised parsing opponent's move");
-       }*/
-      
+      } // end for ever
    }   
    
    /**
