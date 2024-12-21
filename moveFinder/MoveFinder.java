@@ -18,7 +18,8 @@ public class MoveFinder
         return moves.nextMoveWins();    
     }
     
-    public MovesRecord calculateMove(final Move penultimateMove)
+    public MovesRecord calculateMove(final Move penultimateMove, 
+    		Move nextMove)
     {
       
       int alpha = -100000000; // White's min
@@ -36,7 +37,7 @@ public class MoveFinder
          Square openingTo = new Square();
          boolean openingFound = false;
          
-         findBestBlackMove(MOVE_DEPTH, alpha, beta, this.realBoard, moves);
+         findBestBlackMove(MOVE_DEPTH, alpha, beta, this.realBoard, moves, nextMove);
       }
       else
       {
@@ -46,7 +47,7 @@ public class MoveFinder
          Square openingTo = new Square();
          boolean openingFound = false;
          
-         findBestWhiteMove(MOVE_DEPTH, alpha, beta, this.realBoard, penultimateMove, moves);
+         findBestWhiteMove(MOVE_DEPTH, alpha, beta, this.realBoard, penultimateMove, moves, nextMove);
       }
       
 //System.out.println("Calculated moves: " + moves + ".");
@@ -54,8 +55,8 @@ public class MoveFinder
       // Calculating has finished. Set the best move as the move to make.
       // This may have been done already but not if the next move is a winning
       // one.
-      Controller.setMove(moves.getNextMove() );            
-
+      //Controller.setMove(moves.getNextMove() );            
+      nextMove = moves.getNextMove();
       return moves;
     }
     
@@ -63,13 +64,14 @@ public class MoveFinder
                                   int white_min,
                                   int black_max,
                                   final Board theBoard,
-                                  MovesRecord moves)
+                                  MovesRecord moves,
+                                  Move nextMove)
     {
-	  if(Controller.timeUp)
+	  /*if(Controller.timeUp)
 	  {
 //System.out.println("TIME UP! QUITTING");		  
          return 9999999;		  
-	  }	
+	  }	*/
 	  
         int bestScore = 10000000;
         boolean winningMove = false;
@@ -117,13 +119,14 @@ public class MoveFinder
                else
                {
                   Integer best_w_piece_idx = -1;
-                  
+                  Move bestMove = new Move(); // NOT USED?
                   score = findBestWhiteMove(remSearchDepth - 1, 
                                             white_min,
                                             black_max,
                                             newBoard,
                                             Move.NullMove,
-                                            currMoveSeq);
+                                            currMoveSeq,
+                                            bestMove);
                }
                
                /*if(remSearchDepth == MOVE_DEPTH)
@@ -144,7 +147,8 @@ System.out.println("Score: " + score);
                  {
 //                   System.out.println("Best moves for B:" + bestMoveSeq); 
                    System.out.println(bestMoveSeq); 
-                   Controller.setMove(bestMoveSeq.getNextMove() );            
+                   nextMove = bestMoveSeq.getNextMove();
+                   //Controller.setMove(bestMoveSeq.getNextMove() );            
                  }
                }
                
@@ -167,7 +171,8 @@ System.out.println("Score: " + score);
                                   int black_max,
                                   final Board theBoard,
                                   final Move penultimateMove,
-                                  MovesRecord moves)
+                                  MovesRecord moves,
+                                  Move bestNextMove)
     {
         boolean winningMove = false;
 
@@ -227,11 +232,13 @@ System.out.println("Score: " + score);
             else
             {
                 Integer best_b_piece_idx = -1;
+                Move nextMove = new Move();   // NOT USED???
                 score = findBestBlackMove(remSearchDepth - 1, 
                                           white_min,
                                           black_max,
                                           newBoard,
-                                          currMoveSeq);
+                                          currMoveSeq,
+                                          nextMove);
             }
             
   	        // For time being, forbid a king move that was made 2 moves ago.
@@ -266,8 +273,9 @@ System.out.println("Score: " + score);
                 System.out.println(furtherBestMoveSeq);                 
                    
                 // This is the best move so far so store it
-//                Controller.myNextMove.set(furtherBestMoveSeq.getNextMove() );            
-                Controller.setMove(furtherBestMoveSeq.getNextMove() );            
+//                Controller.myNextMove.set(furtherBestMoveSeq.getNextMove() );
+                bestNextMove = furtherBestMoveSeq.getNextMove();
+                //Controller.setMove(furtherBestMoveSeq.getNextMove() );            
               }
               
             }
@@ -310,11 +318,13 @@ System.out.println("Considering 1st move: " + from_sq + "-" + to_sq);
                   Integer best_b_piece_idx = -1;
                   Square best_b_to_square = new Square(); // Declared outside for loop to reduce num ctor calls
                   
+                  Move nextMove = new Move(); // USED??
                   score = findBestBlackMove(remSearchDepth - 1, 
                                             white_min,
                                             black_max,
                                             newBoard,
-                                            currMoveSeq);
+                                            currMoveSeq,
+                                            nextMove);
                }
             
 /*               if(remSearchDepth == MOVE_DEPTH)
@@ -345,7 +355,8 @@ System.out.println(furtherBestMoveSeq);
                    
                       // This is the best move so far so store it
 //                      Controller.myNextMove.set(furtherBestMoveSeq.getNextMove() );            
-                      Controller.myNextMove.set(furtherBestMoveSeq.getNextMove() );            
+					   bestNextMove = furtherBestMoveSeq.getNextMove();
+                      //Controller.myNextMove.set(furtherBestMoveSeq.getNextMove() );            
                    }
                }
             }

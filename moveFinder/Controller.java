@@ -13,17 +13,16 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 public class Controller {
-   static long THINKING_PERIOD = 9000; // in ms
-//   static long THINKING_PERIOD = 9200; // in ms
-   static long WAIT_PERIOD = 50; // in ms
-   WaitingThread waitingThread = new WaitingThread();
-   ProcessingThread processingThread = new ProcessingThread();
+//   static long THINKING_PERIOD = 9000; // in ms
+//   static long WAIT_PERIOD = 50; // in ms
+//   WaitingThread waitingThread = new WaitingThread();
+//   ProcessingThread processingThread = new ProcessingThread();
 
    static boolean moveLock = false;
    static Move myNextMove = new Move(Square.A1, Square.A1, -2);  
    
-   public static boolean timeUp = false;
-   static boolean startTimerNow = false;
+//   public static boolean timeUp = false;
+//   static boolean startTimerNow = false;
    static boolean opponentsMovePending = false;  // Rx move and haven't processed it yet
    
    static boolean waitingForOpponent = false; // Opponent is still thinking
@@ -67,7 +66,7 @@ public class Controller {
    /*
     ** Waits for lock on move, then sets value
     */
-   static public void setMove(Move newMove)
+/*   static public void setMove(Move newMove)
    {
       try
       {
@@ -83,8 +82,8 @@ public class Controller {
         System.out.println("Exception caught in sleep call");
       }
    }
-
-   private class WaitingThread extends java.lang.Thread
+*/
+/*   private class WaitingThread extends java.lang.Thread
    {
       public void run()
       {
@@ -113,15 +112,6 @@ public class Controller {
                // Format message:
                String moveMsg;
                   
-/*               if(theBoard.isBlackMove)
-               {
-                  moveMsg = Controller.black_Move_Prefix;   
-               }    
-               else
-               {
-                  moveMsg = Controller.white_Move_Prefix;   
-               }    
-*/
                moveMsg = myMove.toStringShort() + "<EOF>";
                   
 //                  
@@ -138,12 +128,12 @@ public class Controller {
                {
                   System.out.println("Error raised sending msg:" + exc);  
                }
-*/
+
 //
                   waitingForOpponent = true;
                   
                   // Make the move on our board too
-                  BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
+BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
                   System.out.println("Posn after my move:\n" + theBoard); 
                   myMoves.add(myMove);                                               
             }
@@ -153,11 +143,11 @@ public class Controller {
              System.out.println("Exception caught!");
          } 
       }
-
+*/
       /*
        ** Waits for lock on move, then returns value
        */
-      public Move getMove()
+/*      public Move getMove()
       {
          try
          {
@@ -174,10 +164,10 @@ System.out.println("Exception caught in sleep fn");
          return myNextMove;
      }
      
-     
    }
-
-   private class ProcessingThread extends java.lang.Thread
+*/
+   
+/*   private class ProcessingThread extends java.lang.Thread
    {
       public void run()
       {
@@ -191,7 +181,7 @@ System.out.println("Exception caught in sleep fn");
                   sleep(WAIT_PERIOD);
                }
 //System.out.println("Starting thinking");
-               calculateMove();
+*** calculateMove();
             }
         }
         catch(java.lang.InterruptedException exc)
@@ -201,10 +191,11 @@ System.out.println("Exception caught");
         }
 
       }
-
-      private void calculateMove() throws java.lang.InterruptedException
+*/
+   
+      private Move calculateMove() // throws java.lang.InterruptedException
       {
-         opponentsMovePending = false;
+         //opponentsMovePending = false;
          
          System.out.println("In calculateMove");
 
@@ -245,15 +236,14 @@ System.out.println("Opening found. Using this move");
               
 //System.out.println("Penultimate move:" + penultimateMove);              
              
-            moveFinder.calculateMove(penultimateMove);
+            moveFinder.calculateMove(penultimateMove, myNextMove);
          }
          
          System.out.println("Finishing calculateMove");
+         return myNextMove;
       }
-      
-   }
    
-   private void opponentsMoveMade()
+/*   private void opponentsMoveMade()
    {
       opponentsMovePending = true;
 //      System.out.println("Should start timer now");
@@ -263,7 +253,7 @@ System.out.println("Opening found. Using this move");
       
       timeUp = false;
    } 
-
+*/
    public static boolean ParseInput(String input, int input_length, Square from, Square to, boolean blacksTurn)
    {
       int inputMarker = 0;
@@ -292,32 +282,35 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
 
       if(blacksTurn && !isBlackMove)
       {
-        System.out.println("Msg relates to our (white) move- ignoring");
+        System.out.println("Msg relates to our (white) move- error****");
         return false;
       }
       else if(!blacksTurn && isBlackMove)
       {
-        System.out.println("Msg relates to our (black) move- ignoring");
+        System.out.println("Msg relates to our (black) move- error*****");
         return false;
       }
       
       String fromCol = input.substring(COLOUR_SIZE, COLOUR_SIZE+1);
-      String fromRow;
-      
       String toCol;
-      String toRow;
+      
+      // Rows range from 1->12 from the user's perspective, but are 
+      // stored from 0->11. Store the user and idx values separately
+      String fromRowUser;
+      String toRowUser;
+      
       
       if(input.substring(COLOUR_SIZE + 2, COLOUR_SIZE + 3).equals("-") )
       {
          // Two digit from square
-         fromRow = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 2);
+         fromRowUser = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 2);
          toCol = input.substring(COLOUR_SIZE + 3, COLOUR_SIZE + 4);
          inputMarker = COLOUR_SIZE + 4;
       }
       else
       {
          // Three digit from square
-         fromRow = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 3);
+         fromRowUser = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 3);
          toCol = input.substring(COLOUR_SIZE + 4, COLOUR_SIZE + 5);
          inputMarker = COLOUR_SIZE + 5;
       }
@@ -332,20 +325,20 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       if(sqBracketIdx > dashIdx + 3 )
       {
 //System.out.println("2 digit row");
-         toRow = input.substring(inputMarker, inputMarker + 2);
+         toRowUser = input.substring(inputMarker, inputMarker + 2);
       }
       else
       {
 //System.out.println("1 digit row");
-         toRow = input.substring(inputMarker, inputMarker + 1);
+         toRowUser = input.substring(inputMarker, inputMarker + 1);
       }
 //System.out.println("toRow:'" + toRow + "'");
 
-      if(!ParseCol(fromCol, fromRow, from) )
+      if(!ParseCol(fromCol, fromRowUser, from) )
       {
          System.out.println("Invalid from");
       } 
-      else if(!ParseCol(toCol, toRow, to) )
+      else if(!ParseCol(toCol, toRowUser, to) )
       {
          System.out.println("Invalid to");
          
@@ -366,109 +359,97 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       if(iAmBlack)
       {
         System.out.println("Playing as black");
-        opponentsMovePending = true;
-        startTimerNow = true;
-        waitingForOpponent = false;
+  //      opponentsMovePending = true;
+  //      startTimerNow = true;
+  //      waitingForOpponent = false;
         System.out.println("In Go: opponentsMovePending:" + opponentsMovePending);
       }
       else
       {
         System.out.println("Playing as white");
-        opponentsMovePending = false;
-        startTimerNow = false;
-        waitingForOpponent = true;
+//        opponentsMovePending = false;
+//        startTimerNow = false;
+//        waitingForOpponent = true;
       }
        
-      waitingThread.start();
-      processingThread.start();
+//      waitingThread.start();
+//      processingThread.start();
       
-      System.out.println("Waiting for opponent's move:");
-      System.out.println("waitingForOpponent:" + waitingForOpponent);
+      //System.out.println("Waiting for opponent's move:");
+      //System.out.println("waitingForOpponent:" + waitingForOpponent);
       
-      byte[] buf = new byte[1000];
+      //byte[] buf = new byte[1000];
       //DatagramPacket dgp = new DatagramPacket(buf, buf.length);
       
       for(;;)
       {
-         try
-         {
-            while(!waitingForOpponent)
-            {
-               try
-               {
-                  Thread.sleep(Controller.WAIT_PERIOD, 0);
-               }
-               catch (Exception exc)
-               {
-                  System.out.println("Exception caught trying to sleep");
-               }
-//   System.out.println("Sleeping whilst I wait for opponent");
-               
-            } 
-            
-            // Moving these up:
-//            byte[] buf = new byte[1000];
-//            DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+    	 Move myMove = calculateMove();
 
-            System.out.println("Waiting for msg receipt");
-            System.out.println("Enter move:");
+    	 BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
+         System.out.println("Posn after my move:\n" + theBoard); 
+         myMoves.add(myMove);                                               
+    	 
+         System.out.println("Enter move in format 'white_move:f4-f2<EOF>':");
+         Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
-            Scanner myObj = new Scanner(System.in); // Create a Scanner object
-
-            String userMove = myObj.nextLine(); // Read user input
-            System.out.println("Move is: " + userMove);            	
+         String userMove = myObj.nextLine(); // Read user input
+         System.out.println("Move is: " + userMove);            	
         
-            //String dgp_str = new String(dgp.getData() );
-            //String rcvd = new String(dgp.getData(), 0, dgp.getLength()) + ", from address: " +
-            //                                                                    dgp.getAddress();
-            if(userMove.startsWith("Black_Wins") || userMove.startsWith("White_Wins") )
-            {
-              // Game over
-                System.out.println("Game over! Exiting");
-              return;
-            }
-            boolean isOpponentMove = ParseInput(userMove, userMove.length(),
+         /*if(userMove.startsWith("Black_Wins") || userMove.startsWith("White_Wins") )
+         {
+           // Game over
+           System.out.println("Game over! Exiting");
+           return;
+         }*/
+         boolean isOpponentMove = ParseInput(userMove, userMove.length(),
                                                 opponentMoveFrom, opponentMoveTo, theBoard.isBlackMove);
             
-            if(!isOpponentMove)
-              continue;
+         if(!isOpponentMove)
+           continue;
               
-            waitingForOpponent = false;
+//         waitingForOpponent = false;
             
-            BoardUtils.makeMoveIfPossible(opponentMoveFrom, 
+         boolean validMove = 
+            		BoardUtils.makeMoveIfPossible(opponentMoveFrom, 
                                           opponentMoveTo,
                                           theBoard);     
         
-            if(stillInOpenings)
-            {                                  
-              if(iAmBlack)
-              {
+         if(!validMove)
+         {
+            	//throw new Exception("Invalid move played");
+           System.out.println("***** Invalid move played");     
+         }
+         
+         if(stillInOpenings)
+         {                                  
+            if(iAmBlack)
+            {
                 blackOpenings.whiteMoveMade(opponentMoveFrom, opponentMoveTo);    
-              }
-              else
-              {
-                whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
-              }
             }
+            else
+            {
+                whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
+            }
+          }
 
 //            System.out.println("After opponent's move:\n" + theBoard);     
          
-            opponentsMoveMade();          
-         }
-         catch(java.lang.StringIndexOutOfBoundsException exc)
-         {
-            System.out.println("Exception raised parsing opponent's move");
-         }
-
-      }
-       
+           // opponentsMoveMade();          
+       }
+       /*catch(java.lang.StringIndexOutOfBoundsException exc)
+       {
+          System.out.println("Exception raised parsing opponent's move");
+       }*/
+      
    }   
    
-   /*
+   /**
+    * userRow ranges from 1->11
     * Returns true if successful
     */
-   static boolean ParseCol(String col, String row, Square ref)
+   static boolean ParseCol(String col, String userRow, Square ref)
    {
+	   
       boolean result = true;
 
       if(col.equals("a") )
@@ -518,27 +499,27 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       else
          return false;
          
-      if(row.equals("0") )
+      if(userRow.equals("1") )
          ref.row = Board.ROW_1;
-      else if(row.equals("1") )
+      else if(userRow.equals("2") )
          ref.row = Board.ROW_2;
-      else if(row.equals("2") )
+      else if(userRow.equals("3") )
          ref.row = Board.ROW_3;
-      else if(row.equals("3") )
+      else if(userRow.equals("4") )
          ref.row = Board.ROW_4;
-      else if(row.equals("4") )
+      else if(userRow.equals("5") )
          ref.row = Board.ROW_5;
-      else if(row.equals("5") )
+      else if(userRow.equals("6") )
          ref.row = Board.ROW_6;
-      else if(row.equals("6") )
+      else if(userRow.equals("7") )
          ref.row = Board.ROW_7;
-      else if(row.equals("7") )
+      else if(userRow.equals("8") )
          ref.row = Board.ROW_8;
-      else if(row.equals("8") )
+      else if(userRow.equals("9") )
          ref.row = Board.ROW_9;
-      else if(row.equals("9") )
+      else if(userRow.equals("10") )
          ref.row = Board.ROW_10;
-      else if(row.equals("10") )
+      else if(userRow.equals("11") )
          ref.row = Board.ROW_11;
       else
          return false;

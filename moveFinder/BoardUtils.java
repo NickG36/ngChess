@@ -732,7 +732,7 @@ public class BoardUtils {
                                              Board theBoard)
     {
        boolean isMovePossible = isValidMove(from, to, theBoard);
-
+// TODO - isValidMove could return moving dirn so we don't have to recalculate it
        if(isMovePossible)
        {       
           //

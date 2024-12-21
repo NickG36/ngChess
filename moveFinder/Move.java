@@ -7,6 +7,10 @@ public class Move
     public Square to = new Square();
     public Integer pieceIdx = -1;
     
+    public Move()
+    {
+    }
+    
     public Move(final Square from, final Square to, final int pieceIdx)
     {
        this.from.set(from);        
