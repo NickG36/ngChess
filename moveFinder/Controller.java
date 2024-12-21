@@ -97,39 +97,8 @@ System.out.println("Opening found. Using this move");
    public static boolean ParseInput(String input, int input_length, Square from, Square to, boolean blacksTurn)
    {
       int inputMarker = 0;
-      final int COLOUR_SIZE = 11; // [Black/white]_move:
       
-      String colour = input.substring(0, COLOUR_SIZE);
-//System.out.println("colour:'" + colour + "'");
-      
-      boolean isBlackMove = false;
-      
-      if( (colour.indexOf("hite") > 0) || (colour.indexOf("HITE") > 0) )
-      {
-        isBlackMove = false;
-      }
-      else if( (colour.indexOf("lack") > 0) || (colour.indexOf("LACK") > 0) )
-      {
-        isBlackMove = true;
-      }
-      else
-      {
-System.out.println("Unknown colour in message: " + input + ", ignoring");
-         return false;
-      }
-
-      if(blacksTurn && !isBlackMove)
-      {
-        System.out.println("Msg relates to our (white) move- error****");
-        return false;
-      }
-      else if(!blacksTurn && isBlackMove)
-      {
-        System.out.println("Msg relates to our (black) move- error*****");
-        return false;
-      }
-      
-      String fromCol = input.substring(COLOUR_SIZE, COLOUR_SIZE+1);
+      String fromCol = input.substring(0, 1);
       String toCol;
       
       // Rows range from 1->12 from the user's perspective, but are 
@@ -137,39 +106,31 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       String fromRowUser;
       String toRowUser;
       
-      if(input.substring(COLOUR_SIZE + 2, COLOUR_SIZE + 3).equals("-") )
+      if(input.substring(2, 3).equals("-") )
       {
          // Two digit from square
-         fromRowUser = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 2);
-         toCol = input.substring(COLOUR_SIZE + 3, COLOUR_SIZE + 4);
-         inputMarker = COLOUR_SIZE + 4;
+         fromRowUser = input.substring(1, 2);
+         toCol = input.substring(3, 4);
+         inputMarker = 4;
       }
       else
       {
          // Three digit from square
-         fromRowUser = input.substring(COLOUR_SIZE + 1, COLOUR_SIZE + 3);
-         toCol = input.substring(COLOUR_SIZE + 4, COLOUR_SIZE + 5);
-         inputMarker = COLOUR_SIZE + 5;
+         fromRowUser = input.substring(1, 3);
+         toCol = input.substring(4, 5);
+         inputMarker = 5;
       }
       
-//      String afterMarkerP1 = input.substring(inputMarker + 1, inputMarker + 2);
-
-      //int sqBracketIdx = input.indexOf('<');
-//System.out.println("sqBracketIdx:" + sqBracketIdx);
       int dashIdx = input.indexOf('-');
-//System.out.println("dashIdx:" + dashIdx);
 
       if(input_length > dashIdx + 3 )
       {
-//System.out.println("2 digit row");
          toRowUser = input.substring(inputMarker, inputMarker + 2);
       }
       else
       {
-//System.out.println("1 digit row");
          toRowUser = input.substring(inputMarker, inputMarker + 1);
       }
-//System.out.println("toRow:'" + toRow + "'");
 
       if(!ParseCol(fromCol, fromRowUser, from) )
       {
@@ -178,8 +139,6 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       else if(!ParseCol(toCol, toRowUser, to) )
       {
          System.out.println("Invalid to");
-         
-//         System.out.println(ParseCol(toCol, short_to_row, to) );
       }
      return true;  
    }
@@ -215,7 +174,8 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
          boolean humanEnteredValidMove = false;
          while(!humanEnteredValidMove)
          {
-        	 System.out.println("Enter move in format 'white_move:f4-f2':");
+        	 System.out.println("Enter move in format 'f4-f2':");
+        	 //System.out.println("Enter move in format 'white_move:f4-f2':");
         	 Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
         	 String userMove = myObj.nextLine(); // Read user input
