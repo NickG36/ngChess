@@ -75,7 +75,7 @@ public class MoveFinder
 	  
         int bestScore = 10000000;
         boolean winningMove = false;
-//System.out.println("In MF: fBBM. Rem depth: " + remSearchDepth);        
+System.out.println("In MF: fBBM. Rem depth: " + remSearchDepth);        
         MovesRecord bestMoveSeq = new MovesRecord(true); 
 
         // Then consider black pawn moves
@@ -175,6 +175,8 @@ System.out.println("Score: " + score);
                                   Move bestNextMove)
     {
         boolean winningMove = false;
+
+System.out.println("In MF: fBWhiteM. Rem depth: " + remSearchDepth);        
 
          // Consider king's moves first...
           

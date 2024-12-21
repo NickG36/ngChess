@@ -102,16 +102,16 @@ public class BlackOpeningBook
        }
 	   else if(lastWhiteFromSq.equals(Square.H6) )
 	   {
-		  if(BoardUtils.isValidMove(Square.H1, Square.D6, this.theBoard) )
+		  if(BoardUtils.isValidMove(Square.H1, Square.H6, this.theBoard) )
 		  {
 			  from.set(Square.H1);
 			  to.set(Square.H6);
               result = true;			  
 		  }
-		  else if(BoardUtils.isValidMove(Square.H11, Square.D6, this.theBoard) )
+		  else if(BoardUtils.isValidMove(Square.H11, Square.H6, this.theBoard) )
 		  {
 			  from.set(Square.H11);
-			  to.set(Square.D6);
+			  to.set(Square.H6);
               result = true;			  
 		  }
 	   }

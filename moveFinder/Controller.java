@@ -46,53 +46,52 @@ public class Controller {
      this.whiteOpenings = new WhiteOpeningBook(theBoard);
    }
 
-   
-      private Move calculateMove() // throws java.lang.InterruptedException
-      {
-         System.out.println("In calculateMove");
+   private Move calculateMove() // throws java.lang.InterruptedException
+   {
+	   System.out.println("In calculateMove");
 
-         Square openingFrom = new Square();
-         Square openingTo = new Square();
-         boolean openingFound = false;
-         
-         if(stillInOpenings)
-         {
-            if(iAmBlack)
-            {
-               openingFound = blackOpenings.findMove(openingFrom, openingTo);
-            }
-            else
-            {
-               openingFound = whiteOpenings.findMove(openingFrom, openingTo);
-            }
-            
-            if(!openingFound)
-            {
-              stillInOpenings = false;
-System.out.println("Leaving opening book.");            
-            }
-         }
-            
-         if(openingFound)
-         {
-            myNextMove.set(openingFrom, openingTo);
-System.out.println("Opening found. Using this move");            
-         }
-         else
-         {
-            Move penultimateMove = Move.NullMove;
-            
-            if(myMoves.size() > 2)
-              penultimateMove = myMoves.get(myMoves.size() - 2);
-              
-//System.out.println("Penultimate move:" + penultimateMove);              
-             
-            moveFinder.calculateMove(penultimateMove, myNextMove);
-         }
-         
-         System.out.println("Finishing calculateMove");
-         return myNextMove;
-      }
+	   Square openingFrom = new Square();
+	   Square openingTo = new Square();
+	   boolean openingFound = false;
+
+	   if(stillInOpenings)
+	   {
+		   if(iAmBlack)
+		   {
+			   openingFound = blackOpenings.findMove(openingFrom, openingTo);
+		   }
+		   else
+		   {
+			   openingFound = whiteOpenings.findMove(openingFrom, openingTo);
+		   }
+
+		   if(!openingFound)
+		   {
+			   stillInOpenings = false;
+			   System.out.println("Leaving opening book.");            
+		   }
+	   }
+
+	   if(openingFound)
+	   {
+		   myNextMove.set(openingFrom, openingTo);
+		   System.out.println("Opening found. Using this move");            
+	   }
+	   else
+	   {
+		   Move penultimateMove = Move.NullMove;
+
+		   if(myMoves.size() > 2)
+			   penultimateMove = myMoves.get(myMoves.size() - 2);
+
+		   //System.out.println("Penultimate move:" + penultimateMove);              
+
+		   moveFinder.calculateMove(penultimateMove, myNextMove);
+	   }
+
+	   System.out.println("Finishing calculateMove");
+	   return myNextMove;
+   }
    
    public static boolean ParseInput(String input, int input_length, Square from, Square to, boolean blacksTurn)
    {
@@ -143,11 +142,10 @@ System.out.println("Opening found. Using this move");
      return true;  
    }
                            
-
    public void Go(boolean IAmBlack_param)
    {
 
-	  System.out.println("In go");
+	  //System.out.println("In go");
       iAmBlack = IAmBlack_param;
       
       Square opponentMoveFrom = new Square();
@@ -156,7 +154,6 @@ System.out.println("Opening found. Using this move");
       if(iAmBlack)
       {
         System.out.println("Playing as black");
-        System.out.println("In Go: opponentsMovePending:" + opponentsMovePending);
       }
       else
       {
@@ -166,10 +163,25 @@ System.out.println("Opening found. Using this move");
       for(;;)
       {
     	 Move myMove = calculateMove();
+         System.out.println("I will play:" + myMove); 
 
     	 BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
-         System.out.println("Posn after my move:\n" + theBoard); 
-         myMoves.add(myMove);                                               
+
+    	 System.out.println("Posn after my move:\n" + theBoard); 
+         myMoves.add(myMove); 
+         
+         if(stillInOpenings)
+         {                                  
+           if(iAmBlack)
+           {
+               whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
+           }
+           else
+           {
+               blackOpenings.whiteMoveMade(opponentMoveFrom, opponentMoveTo);    
+           }
+         }
+         
     	 
          boolean humanEnteredValidMove = false;
          while(!humanEnteredValidMove)
@@ -217,6 +229,7 @@ System.out.println("Opening found. Using this move");
                 whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
             }
           }
+          
       } // end for ever
    }   
    

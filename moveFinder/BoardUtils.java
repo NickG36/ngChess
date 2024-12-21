@@ -763,26 +763,39 @@ public class BoardUtils {
 
 //System.out.println("Equals?");       
        if( (movingDirn == Board.MovingDirn.SAME) || (movingDirn == Board.MovingDirn.DIAGONAL))
+       {
+    	 System.out.println("***Invalid move " + from + "->" + to + ", must move up, down, left or right");
          return false;
+       }
        
 //System.out.println("To sq blocked?");      
        if(theBoard.pieces[to.col][to.row] != Board.Piece.EMPTY)
+       {
+      	 System.out.println("***Invalid move " + from + "->" + to + ", trying to move to blocked square");
           return false;
+       }
        
        if(movingPiece != Board.Piece.KING)
        {
          if(to.col == Board.COL_K)
          {
             if( (to.row == Board.ROW_1) || (to.row == Board.ROW_11))
-               return false;        
+            {
+               System.out.println("***Invalid move " + from + "->" + to + ", king can't move to corner square");
+               return false;
+            }
          }
          else if (to.col == Board.COL_A)
          {
             if( (to.row == Board.ROW_1) || (to.row == Board.ROW_11))
-               return false;        
+            {
+               System.out.println("***Invalid move " + from + "->" + to + ", king can't move to corner square");
+               return false;
+            }
          }
          else if( (to.col == Board.COL_F) && (to.row == Board.ROW_6))
          {
+           System.out.println("***Invalid move " + from + "->" + to + ", king can't move to corner square");
            return false;  
          }           
        }
@@ -793,12 +806,12 @@ public class BoardUtils {
        
        if(movingDirn == Board.MovingDirn.DOWN)
        {
-//System.out.println("Trying to move down");      
            // Trying to move down
            for(int idx = from.row - 1; idx >= to.row; --idx)
            {
               if(theBoard.pieces[from.col][idx] != Board.Piece.EMPTY)
               {
+                 System.out.println("***Invalid move " + from + "->" + to + ", trying to move through an occupied square");
                  blocked = true;  
                  break;
               }
@@ -806,12 +819,12 @@ public class BoardUtils {
         }
         else if(movingDirn == Board.MovingDirn.UP)
         {
-//System.out.println("Trying to move up");      
             // Trying to move up
             for(int idx = from.row + 1; idx <= to.row; ++idx)
             {
               if(theBoard.pieces[from.col][idx] != Board.Piece.EMPTY)
               {
+                 System.out.println("***Invalid move " + from + "->" + to + ", trying to move through an occupied square");
                  blocked = true;  
                  break;
               }
@@ -819,12 +832,12 @@ public class BoardUtils {
         }
         else if(movingDirn == Board.MovingDirn.LEFT)
         {
-//System.out.println("Trying to move left");      
             // Trying to move left
             for(int idx = from.col - 1; idx >= to.col; --idx)
             {
               if(theBoard.pieces[idx][from.row] != Board.Piece.EMPTY)
               {
+                 System.out.println("***Invalid move " + from + "->" + to + ", trying to move through an occupied square");
                  blocked = true;  
                  break;
               }
@@ -832,13 +845,12 @@ public class BoardUtils {
         }
         else if(movingDirn == Board.MovingDirn.RIGHT)
         {
-//System.out.println("Trying to move right");      
-              
             // Trying to move right
             for(int idx = from.col + 1; idx <= to.col; ++idx)
             {
               if(theBoard.pieces[idx][from.row] != Board.Piece.EMPTY)
               {
+                 System.out.println("***Invalid move " + from + "->" + to + ", trying to move through an occupied square");
                  blocked = true;  
                  break;
               }
