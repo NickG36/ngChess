@@ -3,6 +3,7 @@ package moveFinder;
 
 import java.io.PrintWriter; 
 import java.net.Socket;
+import java.util.Scanner;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
@@ -35,32 +36,31 @@ public class Controller {
    
    boolean iAmBlack = true;
    boolean stillInOpenings = true;
-   //boolean stillInOpenings = false; // TO DO: remove
    BlackOpeningBook blackOpenings;
    WhiteOpeningBook whiteOpenings;
-   static DatagramSocket sending_dsocket;
-   static DatagramSocket receiving_dsocket;
-   static int TxPortNumber;
-   static InetAddress board_addr;
+//   static DatagramSocket sending_dsocket;
+//   static DatagramSocket receiving_dsocket;
+//   static int TxPortNumber;
+//   static InetAddress board_addr;
    public static final String black_Move_Prefix = "Black_move:";
    public static final String white_Move_Prefix = "White_move:";
    
    public Controller(final Board theBoard,
                      final MoveFinder moveFinder,
-                     final MovesRecord gameMoves,
-                     final DatagramSocket sending_dsocket, final DatagramSocket receiving_dsocket,
-                     final InetAddress board_addr,
-                     final int TxPortNumber)
+                     final MovesRecord gameMoves)
+   //                     final DatagramSocket sending_dsocket, final DatagramSocket receiving_dsocket,
+   //                  final InetAddress board_addr,
+   //                  final int TxPortNumber)
    {
      this.theBoard = theBoard;
      this.moveFinder = moveFinder;
      this.gameMoves = gameMoves;
      this.blackOpenings = new BlackOpeningBook(theBoard);
      this.whiteOpenings = new WhiteOpeningBook(theBoard);
-     this.sending_dsocket = sending_dsocket;
-     this.receiving_dsocket = receiving_dsocket;
-     this.board_addr = board_addr;
-     this.TxPortNumber = TxPortNumber;
+    // this.sending_dsocket = sending_dsocket;
+    // this.receiving_dsocket = receiving_dsocket;
+    // this.board_addr = board_addr;
+    // this.TxPortNumber = TxPortNumber;
    }
 
 
@@ -128,7 +128,7 @@ public class Controller {
                byte[] buf = new byte[1000];
                buf = moveMsg.getBytes();
                System.out.println("Sending message:" + moveMsg);
-               DatagramPacket out = new DatagramPacket(buf, buf.length, board_addr, TxPortNumber);
+/*               DatagramPacket out = new DatagramPacket(buf, buf.length, board_addr, TxPortNumber);
                   
                try
                {
@@ -138,6 +138,7 @@ public class Controller {
                {
                   System.out.println("Error raised sending msg:" + exc);  
                }
+*/
 //
                   waitingForOpponent = true;
                   
@@ -385,7 +386,7 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
       System.out.println("waitingForOpponent:" + waitingForOpponent);
       
       byte[] buf = new byte[1000];
-      DatagramPacket dgp = new DatagramPacket(buf, buf.length);
+      //DatagramPacket dgp = new DatagramPacket(buf, buf.length);
       
       for(;;)
       {
@@ -410,28 +411,23 @@ System.out.println("Unknown colour in message: " + input + ", ignoring");
 //            DatagramPacket dgp = new DatagramPacket(buf, buf.length);
 
             System.out.println("Waiting for msg receipt");
-            try
-            {
-               receiving_dsocket.receive(dgp);
-            }
-            catch(IOException exc)
-            {
-               System.out.println("Error raised receiving msg:" + exc);  
-            }
+            System.out.println("Enter move:");
+
+            Scanner myObj = new Scanner(System.in); // Create a Scanner object
+
+            String userMove = myObj.nextLine(); // Read user input
+            System.out.println("Move is: " + userMove);            	
         
-            String dgp_str = new String(dgp.getData() );
-            String rcvd = new String(dgp.getData(), 0, dgp.getLength()) + ", from address: " +
-                                                                                dgp.getAddress();
-            System.out.println("Move received:" + rcvd);
-// CHANGED:            
-//            if(rcvd.startsWith("Black_Wins") || rcvd.startsWith("White_Wins") )
-            if(dgp_str.startsWith("Black_Wins") || dgp_str.startsWith("White_Wins") )
+            //String dgp_str = new String(dgp.getData() );
+            //String rcvd = new String(dgp.getData(), 0, dgp.getLength()) + ", from address: " +
+            //                                                                    dgp.getAddress();
+            if(userMove.startsWith("Black_Wins") || userMove.startsWith("White_Wins") )
             {
               // Game over
                 System.out.println("Game over! Exiting");
               return;
             }
-            boolean isOpponentMove = ParseInput(dgp_str, dgp_str.length(),
+            boolean isOpponentMove = ParseInput(userMove, userMove.length(),
                                                 opponentMoveFrom, opponentMoveTo, theBoard.isBlackMove);
             
             if(!isOpponentMove)

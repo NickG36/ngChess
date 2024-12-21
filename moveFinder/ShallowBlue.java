@@ -15,9 +15,9 @@ import java.net.InetAddress;
 
 public class ShallowBlue {
 
-  final static String host = "localhost";
-  static int TxPortNumber = 12000;
-  static int RxPortNumber = 12001;
+//  final static String host = "localhost";
+//  static int TxPortNumber = 12000;
+//  static int RxPortNumber = 12001;
 
   public static void main(String[] args) throws java.io.IOException
   { 
@@ -53,7 +53,7 @@ System.out.println("In ShallowBlue main");
      //                                                  ", Rx port " + RxPortNumber);
 //     boolean connectionMade = false;
      
-System.out.println("Using host:" + host);
+//System.out.println("Using host:" + host);
 
        //DatagramSocket receiving_dsocket = new DatagramSocket(RxPortNumber);
        //DatagramSocket sending_dsocket = new DatagramSocket();
@@ -70,10 +70,10 @@ System.out.println("Using host:" + host);
        System.out.println("Start:" + theBoard);
        Controller controller = new Controller(theBoard,
                                               moveFinder,
-                                              gameMoves,
+                                              gameMoves);
                                               //sending_dsocket, receiving_dsocket,
-                                              board_address,
-                                              TxPortNumber);
+                                              //board_address,
+                                              //TxPortNumber);
      
        controller.Go(I_Am_Black);
 System.out.println("Exiting ShallowBlue.");
@@ -81,7 +81,7 @@ System.out.println("Exiting ShallowBlue.");
   
   
 
-  static InetAddress performHandshake(DatagramSocket sending_dsocket,
+/*  static InetAddress performHandshake(DatagramSocket sending_dsocket,
                                       DatagramSocket receiving_dsocket,
                                       boolean I_Am_Black,
                                       int TxPortNumber)
@@ -138,7 +138,7 @@ System.out.println("Exiting ShallowBlue.");
     }
     
     // If we are playing as black then wait for a 'Game_Start' message
-    /* Added to board in V2.8 */
+    /* Added to board in V2.8 
     
     boolean game_start = false;
     
@@ -177,4 +177,6 @@ System.out.println("Exiting ShallowBlue.");
     InetAddress board_address = dgp.getAddress();
     return board_address;
   }
+
+*/
 }
