@@ -15,7 +15,7 @@ import java.net.InetAddress;
 public class Controller {
 
    static boolean moveLock = false;
-   static Move myNextMove = new Move(Square.A1, Square.A1, -2);  
+  // static Move myNextMove = new Move(Square.A1, Square.A1, -2);  
 
    static boolean opponentsMovePending = false;  // Rx move and haven't processed it yet
    
@@ -54,6 +54,8 @@ public class Controller {
 	   Square openingTo = new Square();
 	   boolean openingFound = false;
 
+	   Move myNextMove = new Move();
+	   
 	   if(stillInOpenings)
 	   {
 		   if(iAmBlack)

@@ -795,7 +795,7 @@ public class BoardUtils {
          }
          else if( (to.col == Board.COL_F) && (to.row == Board.ROW_6))
          {
-           System.out.println("***Invalid move " + from + "->" + to + ", king can't move to corner square");
+           System.out.println("***Invalid move " + from + "->" + to + ", white can't move to centre square");
            return false;  
          }           
        }

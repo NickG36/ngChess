@@ -32,21 +32,11 @@ public class MoveFinder
       if(this.realBoard.isBlackMove)
       {
          moves.blackMovesInitially = true;
-         
-         Square openingFrom = new Square();
-         Square openingTo = new Square();
-         boolean openingFound = false;
-         
          findBestBlackMove(MOVE_DEPTH, alpha, beta, this.realBoard, moves, nextMove);
       }
       else
       {
          moves.blackMovesInitially = false;
-         
-         Square openingFrom = new Square();
-         Square openingTo = new Square();
-         boolean openingFound = false;
-         
          findBestWhiteMove(MOVE_DEPTH, alpha, beta, this.realBoard, penultimateMove, moves, nextMove);
       }
       
@@ -56,7 +46,7 @@ public class MoveFinder
       // This may have been done already but not if the next move is a winning
       // one.
       //Controller.setMove(moves.getNextMove() );            
-      nextMove = moves.getNextMove();
+      nextMove.set(moves.getNextMove());
       return moves;
     }
     
@@ -75,7 +65,7 @@ public class MoveFinder
 	  
         int bestScore = 10000000;
         boolean winningMove = false;
-System.out.println("In MF: fBBM. Rem depth: " + remSearchDepth);        
+//System.out.println("In MF: fBBM. Rem depth: " + remSearchDepth);        
         MovesRecord bestMoveSeq = new MovesRecord(true); 
 
         // Then consider black pawn moves
@@ -176,7 +166,7 @@ System.out.println("Score: " + score);
     {
         boolean winningMove = false;
 
-System.out.println("In MF: fBWhiteM. Rem depth: " + remSearchDepth);        
+//System.out.println("In MF: fBWhiteM. Rem depth: " + remSearchDepth);        
 
          // Consider king's moves first...
           
