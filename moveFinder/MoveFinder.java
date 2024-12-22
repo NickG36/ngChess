@@ -96,7 +96,6 @@ public class MoveFinder
                } 
                else
                {
-                  Integer best_w_piece_idx = -1;
                   Move bestMove = new Move(); // NOT USED?
                   score = findBestWhiteMove(remSearchDepth - 1, 
                                             white_min,

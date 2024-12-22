@@ -757,18 +757,12 @@ public class BoardUtils {
        Board.MovingDirn movingDirn = findMovingDirn(from, to);
        Board.Piece movingPiece = theBoard.pieces[from.col][from.row];
        
-//System.out.println("Going from " + from + " to " + to);
-
-//       System.out.println(movingDirn);
-
-//System.out.println("Equals?");       
        if( (movingDirn == Board.MovingDirn.SAME) || (movingDirn == Board.MovingDirn.DIAGONAL))
        {
     	 System.out.println("***Invalid move " + from + "->" + to + ", must move up, down, left or right");
          return false;
        }
        
-//System.out.println("To sq blocked?");      
        if(theBoard.pieces[to.col][to.row] != Board.Piece.EMPTY)
        {
       	 System.out.println("***Invalid move " + from + "->" + to + ", trying to move to blocked square");
@@ -781,7 +775,7 @@ public class BoardUtils {
          {
             if( (to.row == Board.ROW_1) || (to.row == Board.ROW_11))
             {
-               System.out.println("***Invalid move " + from + "->" + to + ", king can't move to corner square");
+               System.out.println("***Invalid move " + from + "->" + to + ", only king can move to corner square");
                return false;
             }
          }

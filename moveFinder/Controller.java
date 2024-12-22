@@ -154,6 +154,56 @@ public class Controller {
 	   }
    }
 
+   private void humanMove(Board board,
+		   				  Square opponentMoveFrom,
+		   				  Square opponentMoveTo)
+   {
+       boolean humanEnteredValidMove = false;
+       while(!humanEnteredValidMove)
+       {
+      	 System.out.println("Enter move in format 'f4-f2':");
+      	 Scanner myObj = new Scanner(System.in); // Create a Scanner object
+
+      	 String userMove = myObj.nextLine(); // Read user input
+      	 System.out.println("Move is: " + userMove);            	
+      
+      	 boolean isOpponentMove = ParseInput(userMove, userMove.length(),
+                                              opponentMoveFrom, opponentMoveTo, theBoard.isBlackMove);
+          
+      	 if(!isOpponentMove)
+      	 {
+      		 System.out.println("***** Invalid turn - logic error");     
+      	 }
+            
+      	 boolean validMove = 
+          		BoardUtils.makeMoveIfPossible(opponentMoveFrom, 
+                                        opponentMoveTo,
+                                        theBoard);     
+      
+      	 if(!validMove)
+      	 {
+      		 System.out.println("***** Invalid move played");     
+      	 }
+      	 else
+      	 {
+      		 humanEnteredValidMove = true;
+      	 }
+       } // end while
+       
+       System.out.println("Posn after your move:\n" + theBoard); 
+       checkForWin(theBoard);
+       if(stillInOpenings)
+       {                                  
+          if(iAmBlack)
+          {
+              blackOpenings.whiteMoveMade(opponentMoveFrom, opponentMoveTo);    
+          }
+          else
+          {
+              whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
+          }
+       }
+   }
    
    public void Go(boolean IAmBlack_param)
    {
@@ -164,13 +214,18 @@ public class Controller {
       
       if(iAmBlack)
       {
-        System.out.println("Playing as black");
+        System.out.println("I am playing as black");
       }
       else
       {
-        System.out.println("Playing as white");
+        System.out.println("I am playing as white");
       }
-       
+      
+      if(!iAmBlack)
+      {
+    	  humanMove(theBoard, opponentMoveFrom, opponentMoveTo);
+      }
+      
       for(;;)
       {
     	 Move myMove = calculateMove();
@@ -195,7 +250,8 @@ public class Controller {
            }
          }
          
-    	 
+         humanMove(theBoard, opponentMoveFrom, opponentMoveTo);
+    	 /*
          boolean humanEnteredValidMove = false;
          while(!humanEnteredValidMove)
          {
@@ -241,7 +297,7 @@ public class Controller {
                 whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
             }
           }
-          
+          */
       } // end for ever
    }   
    
