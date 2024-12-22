@@ -57,12 +57,6 @@ public class MoveFinder
                                   MovesRecord moves,
                                   Move nextMove)
     {
-	  /*if(Controller.timeUp)
-	  {
-//System.out.println("TIME UP! QUITTING");		  
-         return 9999999;		  
-	  }	*/
-	  
         int bestScore = 10000000;
         boolean winningMove = false;
 //System.out.println("In MF: fBBM. Rem depth: " + remSearchDepth);        
@@ -78,12 +72,6 @@ public class MoveFinder
            Square best_w_to_square = new Square(); // Declared outside for loop to reduce num ctor calls
            for(Square to_sq : validToSquares)
            {
-//               if(remSearchDepth == MOVE_DEPTH)
-               //{
-//System.out.println("Considering 1st move: " + from_sq + "-" + to_sq);				   
-//				 currNextMove.set(from_sq, to_sq);   
-		       //}
-			   			   
                MovesRecord currMoveSeq = new MovesRecord(true);
                
                Board newBoard = new Board(theBoard);
@@ -135,10 +123,8 @@ System.out.println("Score: " + score);
                  
                  if(remSearchDepth == MOVE_DEPTH)
                  {
-//                   System.out.println("Best moves for B:" + bestMoveSeq); 
                    System.out.println(bestMoveSeq); 
                    nextMove = bestMoveSeq.getNextMove();
-                   //Controller.setMove(bestMoveSeq.getNextMove() );            
                  }
                }
                
@@ -183,15 +169,6 @@ System.out.println("Score: " + score);
 //System.out.println("Curr next move set to :" + currNextMove);				 
   	        //}
   	        
-  	        // For time being, forbid a king move that was made 2 moves ago.
-  	        /*if( (remSearchDepth == MOVE_DEPTH) &&
-  	             penultimateMove.to.equals(currSquare) &&
-  	             penultimateMove.from.equals(theBoard.kingLocn) ) 
-  	        {
-				System.out.println("REPITITION");
-//				continue;
-			}*/
-  	        
             Board newBoard = new Board(theBoard);
             
             winningMove = newBoard.moveKingTo(currSquare);
@@ -206,10 +183,6 @@ System.out.println("Score: " + score);
                 // (we don't need to descend another level)
                 moves.score = BoardRater.WHITE_WIN + remSearchDepth;
                 
-//System.out.println("White win: moves:" + moves);                
-//System.out.println("White win: currNextMove:" + currNextMove);                
-//                Controller.setMove(currNextMove);            
-                
                 return moves.score;
             }
             
@@ -223,7 +196,7 @@ System.out.println("Score: " + score);
             } 
             else
             {
-                Integer best_b_piece_idx = -1;
+                //Integer best_b_piece_idx = -1;
                 Move nextMove = new Move();   // NOT USED???
                 score = findBestBlackMove(remSearchDepth - 1, 
                                           white_min,

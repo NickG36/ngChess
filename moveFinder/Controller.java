@@ -15,7 +15,6 @@ import java.net.InetAddress;
 public class Controller {
 
    static boolean moveLock = false;
-  // static Move myNextMove = new Move(Square.A1, Square.A1, -2);  
 
    static boolean opponentsMovePending = false;  // Rx move and haven't processed it yet
    
@@ -32,9 +31,6 @@ public class Controller {
    BlackOpeningBook blackOpenings;
    WhiteOpeningBook whiteOpenings;
 
-//   public static final String black_Move_Prefix = "Black_move:";
-//   public static final String white_Move_Prefix = "White_move:";
-   
    public Controller(final Board theBoard,
                      final MoveFinder moveFinder,
                      final MovesRecord gameMoves)
@@ -85,8 +81,6 @@ public class Controller {
 
 		   if(myMoves.size() > 2)
 			   penultimateMove = myMoves.get(myMoves.size() - 2);
-
-		   //System.out.println("Penultimate move:" + penultimateMove);              
 
 		   moveFinder.calculateMove(penultimateMove, myNextMove);
 	   }
@@ -143,11 +137,26 @@ public class Controller {
       }
      return true;  
    }
-                           
+
+   public static void checkForWin(Board theBoard)
+   {
+	   int currRating = BoardRater.rateBoard(theBoard);
+
+	   if(currRating == BoardRater.BLACK_WIN)
+	   {
+		   System.out.println("BLACK HAS WON!!!!");
+		   System.exit(1);
+	   }
+	   else if(currRating == BoardRater.WHITE_WIN)
+	   {
+		   System.out.println("WHITE HAS WON!!!!");
+		   System.exit(2);
+	   }
+   }
+
+   
    public void Go(boolean IAmBlack_param)
    {
-
-	  //System.out.println("In go");
       iAmBlack = IAmBlack_param;
       
       Square opponentMoveFrom = new Square();
@@ -171,6 +180,8 @@ public class Controller {
 
     	 System.out.println("Posn after my move:\n" + theBoard); 
          myMoves.add(myMove); 
+
+         checkForWin(theBoard);
          
          if(stillInOpenings)
          {                                  
@@ -189,7 +200,6 @@ public class Controller {
          while(!humanEnteredValidMove)
          {
         	 System.out.println("Enter move in format 'f4-f2':");
-        	 //System.out.println("Enter move in format 'white_move:f4-f2':");
         	 Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
         	 String userMove = myObj.nextLine(); // Read user input
@@ -210,7 +220,6 @@ public class Controller {
         
         	 if(!validMove)
         	 {
-            	//throw new Exception("Invalid move played");
         		 System.out.println("***** Invalid move played");     
         	 }
         	 else
@@ -220,6 +229,7 @@ public class Controller {
          } // end while
          
          System.out.println("Posn after your move:\n" + theBoard); 
+         checkForWin(theBoard);
          if(stillInOpenings)
          {                                  
             if(iAmBlack)
