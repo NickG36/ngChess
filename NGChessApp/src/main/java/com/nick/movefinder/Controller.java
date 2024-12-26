@@ -1,5 +1,5 @@
 
-package moveFinder;
+package com.nick.movefinder;
 
 import java.io.PrintWriter; 
 import java.net.Socket;

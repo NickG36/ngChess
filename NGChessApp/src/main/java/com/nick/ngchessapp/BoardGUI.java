@@ -4,6 +4,19 @@
  */
 package com.nick.ngchessapp;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import com.nick.movefinder.Board;
+import com.nick.movefinder.Board.Piece;
+import java.awt.Color;
+
 /**
  *
  * @author nick_
@@ -13,10 +26,93 @@ public class BoardGUI extends javax.swing.JFrame {
     /**
      * Creates new form BoardGUI
      */
-    public BoardGUI() {
+    public BoardGUI(Board theBoard) {
+        this.theBoard = theBoard;
         initComponents();
+        final java.awt.Color BLACK_BACKGROUND = new java.awt.Color(0, 0, 0);
+        
+        theButtons = new ArrayList<>();
+        
+        jPanel1.setLayout(new GridLayout(NUM_ROWS, NUM_COLS)); // Set GridLayout Manager
+        
+        final int SQUARE_SIZE = 60;
+        for(int rowsIdx = 0; rowsIdx < NUM_ROWS; ++rowsIdx)
+        {
+            ArrayList<javax.swing.JButton> theRow = new ArrayList<>();
+            
+            for(int colsIdx = 0; colsIdx < NUM_COLS; ++colsIdx)
+            {
+                javax.swing.JButton newButton = new javax.swing.JButton();
+                newButton.setBackground(new java.awt.Color(255, 255, 255));
+                newButton.setForeground(Color.black);
+                Dimension preferredSize = new Dimension(SQUARE_SIZE, SQUARE_SIZE);
+                newButton.setPreferredSize(preferredSize);
+                theRow.add(newButton);
+                jPanel1.add(newButton);
+                    
+            }
+            theButtons.add(theRow);
+        }
+        
+        theButtons.get(0).get(0).setBackground(BLACK_BACKGROUND);
+        theButtons.get(0).get(NUM_COLS - 1).setBackground(BLACK_BACKGROUND);
+        theButtons.get(NUM_ROWS/2).get(NUM_COLS/2).setBackground(BLACK_BACKGROUND);
+        theButtons.get(NUM_ROWS - 1).get(0).setBackground(BLACK_BACKGROUND);
+        theButtons.get(NUM_ROWS - 1).get(NUM_COLS - 1).setBackground(BLACK_BACKGROUND);
+        
+        updateBoard();
+    }
+    
+    private void updateBoard()
+    {
+        for(int rowsIdx = 0; rowsIdx < NUM_ROWS; ++rowsIdx)
+        {
+            for(int colsIdx = 0; colsIdx < NUM_COLS; ++colsIdx)
+            {
+                javax.swing.JButton currButton = theButtons.get(rowsIdx).get(colsIdx);
+                Piece currPiece = theBoard.pieces[rowsIdx][colsIdx];
+                
+                String symbol = "";
+                if(null != currPiece)
+                    
+                switch (currPiece) {
+                    case BLACK -> symbol = "B";
+                    case WHITE -> symbol = "W";
+                    case KING -> symbol = "K";
+                    default -> {
+                    }
+                }
+            
+                currButton.setText(symbol);
+            
+                boolean isCorner = isBlackSquare(rowsIdx, colsIdx);
+                if(isCorner)
+                {
+                    currButton.setForeground(Color.white);
+                }
+                else
+                {
+                    currButton.setForeground(Color.black);
+                }
+            }
+        }
     }
 
+    boolean isBlackSquare(int rowIdx, int colIdx)
+    {
+        boolean result = false;
+        
+        if( (rowIdx == 0) && (colIdx == 0))
+        {
+            result = true;
+        }
+        else if( (rowIdx == NUM_ROWS /2 ) && 
+                 (colIdx == NUM_COLS /2 )  )
+        {
+            result = true;
+        }
+        return result;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,58 +122,29 @@ public class BoardGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setLabel("button00");
-
-        jButton2.setLabel("button01");
-
-        jButton3.setLabel("button10");
-
-        jButton4.setLabel("button11");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        jPanel1.setAlignmentX(0.0F);
+        jPanel1.setAlignmentY(0.0F);
+        jPanel1.setAutoscrolls(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addContainerGap(17, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGap(0, 1095, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(61, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
-                .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addGap(34, 34, 34))
+            .addGap(0, 151, Short.MAX_VALUE)
         );
 
         jTextArea1.setColumns(20);
@@ -91,14 +158,40 @@ public class BoardGUI extends javax.swing.JFrame {
             }
         });
 
+        jToggleButton1.setText("jToggleButton1");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(249, 249, 249)
+                        .addComponent(jToggleButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -109,7 +202,11 @@ public class BoardGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(jToggleButton1)
+                .addGap(63, 63, 63)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(694, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -120,18 +217,20 @@ public class BoardGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
+        System.out.println("In BoardGUI main");
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -154,23 +253,28 @@ public class BoardGUI extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(BoardGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+/*
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+/*        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new BoardGUI().setVisible(true);
             }
         });
+        */
     }
 
+    int NUM_ROWS = Board.NUM_ROWS;
+    int NUM_COLS = Board.NUM_COLS;
+    ArrayList<ArrayList<javax.swing.JButton>> theButtons;
+    Board theBoard;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }

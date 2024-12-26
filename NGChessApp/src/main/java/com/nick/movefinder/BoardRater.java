@@ -1,6 +1,6 @@
 
 package com.nick.movefinder;
-     
+
 public class BoardRater
 {
     public final static int WHITE_WIN = 100000;

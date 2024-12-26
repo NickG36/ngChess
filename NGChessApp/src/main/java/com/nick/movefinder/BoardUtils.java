@@ -1,10 +1,10 @@
 
-package moveFinder;
+package com.nick.movefinder;
 
-import static moveFinder.Board.COL_F;
-import static moveFinder.Board.NUM_COLS;
-import static moveFinder.Board.NUM_ROWS;
-import static moveFinder.Board.ROW_6;
+import static com.nick.movefinder.Board.COL_F;
+import static com.nick.movefinder.Board.NUM_COLS;
+import static com.nick.movefinder.Board.NUM_ROWS;
+import static com.nick.movefinder.Board.ROW_6;
 
 /**
  *

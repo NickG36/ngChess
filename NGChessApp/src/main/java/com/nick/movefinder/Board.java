@@ -1,5 +1,5 @@
 
-package moveFinder;
+package com.nick.movefinder;
 
 public class Board {
     /**
@@ -21,14 +21,14 @@ public class Board {
     
     public class Barricades
     {
-	   BarricadeOccupied topLeft;	
-	   BarricadeOccupied topRight;	
-	   BarricadeOccupied bottomLeft;	
-	   BarricadeOccupied bottomRight;	
-	   int totBlackCentresOccupied;
-	   int totWhiteCentresOccupied;
-	   int totBlackEndsOccupied;
-	   int totWhiteEndsOccupied;
+	public BarricadeOccupied topLeft;	
+	public BarricadeOccupied topRight;	
+	public BarricadeOccupied bottomLeft;	
+	public BarricadeOccupied bottomRight;	
+	public int totBlackCentresOccupied;
+	public int totWhiteCentresOccupied;
+	public int totBlackEndsOccupied;
+	public int totWhiteEndsOccupied;
 	   
 	   public Barricades()
 	   {
@@ -274,6 +274,7 @@ public class Board {
       {
           result = true;
       }
+
       return result;
     }
     

@@ -1,5 +1,5 @@
 
-package moveFinder;
+package com.nick.movefinder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
