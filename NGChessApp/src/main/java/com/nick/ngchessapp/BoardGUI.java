@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import com.nick.movefinder.Board;
 import com.nick.movefinder.Board.Piece;
+import com.nick.movefinder.BoardUtils;
 import com.nick.movefinder.Square;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -26,13 +27,7 @@ import javax.swing.JButton;
  * @author nick_
  */
 public class BoardGUI extends javax.swing.JFrame {
-/*
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-    */
+
     public class ButtonListener implements ActionListener
     {
         void buttonPressed(int guiRow, int col)
@@ -40,7 +35,30 @@ public class BoardGUI extends javax.swing.JFrame {
             System.out.println("buttonPressed: row: " + guiRow + ", col:" + col + " pressed");
             int boardRow = NUM_ROWS - guiRow - 1;
             Square asSquare = new Square(col, boardRow);
-            fromText.setText(asSquare.toString() );
+            
+            if(!fromAlreadySelected)
+            {
+                fromAlreadySelected = true;
+                fromSquare = asSquare;
+                fromText.setText(asSquare.toString() );
+            }
+            else
+            {
+                boolean validMove = 
+          		BoardUtils.makeMoveIfPossible(fromSquare, 
+                                        asSquare,
+                                        theBoard);     
+      
+                if(!validMove)    
+                {
+                    System.out.println("Invalid move from:" + fromSquare + " to " + asSquare);
+                }
+                else
+                {
+                    BoardGUI.updateBoard();
+                }
+                fromAlreadySelected = false;
+            }
         }
         
         public ButtonListener(int guiRow, int col)
@@ -56,6 +74,9 @@ public class BoardGUI extends javax.swing.JFrame {
         }
         private int guiRow;
         private int col;
+        
+        private static boolean fromAlreadySelected = false;
+        private static Square fromSquare;
     };
     
     /**
@@ -84,18 +105,24 @@ public class BoardGUI extends javax.swing.JFrame {
                 newButton.setPreferredSize(preferredSize);
                 theRow.add(newButton);
                 jPanel1.add(newButton);
+
+                if(isBlackSquare(rowsIdx, colsIdx))
+                {
+                    newButton.setBackground(BLACK_BACKGROUND);
+                }
             }
+            
             theButtons.add(theRow);
         }
         
         // Set the black square backgrounds
-        final int MIDDLE_IDX = 6;
+        /*final int MIDDLE_IDX = 6;
         theButtons.get(0).get(1).setBackground(BLACK_BACKGROUND);
         theButtons.get(0).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
         theButtons.get(MIDDLE_IDX-1).get(MIDDLE_IDX).setBackground(BLACK_BACKGROUND);
         theButtons.get(NUM_ROWS-1).get(1).setBackground(BLACK_BACKGROUND);
         theButtons.get(NUM_ROWS-1).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
-
+*/
         // Set the grid label squares:
         for(int colIdx = 1; colIdx < NUM_COLS + 1; ++colIdx)
         {
@@ -278,137 +305,140 @@ public class BoardGUI extends javax.swing.JFrame {
         theButtons.get(0).get(10).addActionListener(listener09);
         theButtons.get(0).get(11).addActionListener(listener010);
         
-        theButtons.get(1).get(0).addActionListener(listener10);
-        theButtons.get(1).get(1).addActionListener(listener11);
-        theButtons.get(1).get(2).addActionListener(listener12);
-        theButtons.get(1).get(3).addActionListener(listener13);
-        theButtons.get(1).get(4).addActionListener(listener14);
-        theButtons.get(1).get(5).addActionListener(listener15);
-        theButtons.get(1).get(6).addActionListener(listener16);
-        theButtons.get(1).get(7).addActionListener(listener17);
-        theButtons.get(1).get(8).addActionListener(listener18);
-        theButtons.get(1).get(9).addActionListener(listener19);
-        theButtons.get(1).get(10).addActionListener(listener110);
+        theButtons.get(1).get(1).addActionListener(listener10);
+        theButtons.get(1).get(2).addActionListener(listener11);
+        theButtons.get(1).get(3).addActionListener(listener12);
+        theButtons.get(1).get(4).addActionListener(listener13);
+        theButtons.get(1).get(5).addActionListener(listener14);
+        theButtons.get(1).get(6).addActionListener(listener15);
+        theButtons.get(1).get(7).addActionListener(listener16);
+        theButtons.get(1).get(8).addActionListener(listener17);
+        theButtons.get(1).get(9).addActionListener(listener18);
+        theButtons.get(1).get(10).addActionListener(listener19);
+        theButtons.get(1).get(11).addActionListener(listener110);
 
-        theButtons.get(2).get(0).addActionListener(listener20);
-        theButtons.get(2).get(1).addActionListener(listener21);
-        theButtons.get(2).get(2).addActionListener(listener22);
-        theButtons.get(2).get(3).addActionListener(listener23);
-        theButtons.get(2).get(4).addActionListener(listener24);
-        theButtons.get(2).get(5).addActionListener(listener25);
-        theButtons.get(2).get(6).addActionListener(listener26);
-        theButtons.get(2).get(7).addActionListener(listener27);
-        theButtons.get(2).get(8).addActionListener(listener28);
-        theButtons.get(2).get(9).addActionListener(listener29);
-        theButtons.get(2).get(10).addActionListener(listener210);
+        theButtons.get(2).get(1).addActionListener(listener20);
+        theButtons.get(2).get(2).addActionListener(listener21);
+        theButtons.get(2).get(3).addActionListener(listener22);
+        theButtons.get(2).get(4).addActionListener(listener23);
+        theButtons.get(2).get(5).addActionListener(listener24);
+        theButtons.get(2).get(6).addActionListener(listener25);
+        theButtons.get(2).get(7).addActionListener(listener26);
+        theButtons.get(2).get(8).addActionListener(listener27);
+        theButtons.get(2).get(9).addActionListener(listener28);
+        theButtons.get(2).get(10).addActionListener(listener29);
+        theButtons.get(2).get(11).addActionListener(listener210);
 
-        theButtons.get(3).get(0).addActionListener(listener30);
-        theButtons.get(3).get(1).addActionListener(listener31);
-        theButtons.get(3).get(2).addActionListener(listener32);
-        theButtons.get(3).get(3).addActionListener(listener33);
-        theButtons.get(3).get(4).addActionListener(listener34);
-        theButtons.get(3).get(5).addActionListener(listener35);
-        theButtons.get(3).get(6).addActionListener(listener36);
-        theButtons.get(3).get(7).addActionListener(listener37);
-        theButtons.get(3).get(8).addActionListener(listener38);
-        theButtons.get(3).get(9).addActionListener(listener39);
-        theButtons.get(3).get(10).addActionListener(listener310);
+        theButtons.get(3).get(1).addActionListener(listener30);
+        theButtons.get(3).get(2).addActionListener(listener31);
+        theButtons.get(3).get(3).addActionListener(listener32);
+        theButtons.get(3).get(4).addActionListener(listener33);
+        theButtons.get(3).get(5).addActionListener(listener34);
+        theButtons.get(3).get(6).addActionListener(listener35);
+        theButtons.get(3).get(7).addActionListener(listener36);
+        theButtons.get(3).get(8).addActionListener(listener37);
+        theButtons.get(3).get(9).addActionListener(listener38);
+        theButtons.get(3).get(10).addActionListener(listener39);
+        theButtons.get(3).get(11).addActionListener(listener310);
 
-        theButtons.get(4).get(0).addActionListener(listener40);
-        theButtons.get(4).get(1).addActionListener(listener41);
-        theButtons.get(4).get(2).addActionListener(listener42);
-        theButtons.get(4).get(3).addActionListener(listener43);
-        theButtons.get(4).get(4).addActionListener(listener44);
-        theButtons.get(4).get(5).addActionListener(listener45);
-        theButtons.get(4).get(6).addActionListener(listener46);
-        theButtons.get(4).get(7).addActionListener(listener47);
-        theButtons.get(4).get(8).addActionListener(listener48);
-        theButtons.get(4).get(9).addActionListener(listener49);
-        theButtons.get(4).get(10).addActionListener(listener410);
+        theButtons.get(4).get(1).addActionListener(listener40);
+        theButtons.get(4).get(2).addActionListener(listener41);
+        theButtons.get(4).get(3).addActionListener(listener42);
+        theButtons.get(4).get(4).addActionListener(listener43);
+        theButtons.get(4).get(5).addActionListener(listener44);
+        theButtons.get(4).get(6).addActionListener(listener45);
+        theButtons.get(4).get(7).addActionListener(listener46);
+        theButtons.get(4).get(8).addActionListener(listener47);
+        theButtons.get(4).get(9).addActionListener(listener48);
+        theButtons.get(4).get(10).addActionListener(listener49);
+        theButtons.get(4).get(11).addActionListener(listener410);
 
-        theButtons.get(5).get(0).addActionListener(listener50);
-        theButtons.get(5).get(1).addActionListener(listener51);
-        theButtons.get(5).get(2).addActionListener(listener52);
-        theButtons.get(5).get(3).addActionListener(listener53);
-        theButtons.get(5).get(4).addActionListener(listener54);
-        theButtons.get(5).get(5).addActionListener(listener55);
-        theButtons.get(5).get(6).addActionListener(listener56);
-        theButtons.get(5).get(7).addActionListener(listener57);
-        theButtons.get(5).get(8).addActionListener(listener58);
-        theButtons.get(5).get(9).addActionListener(listener59);
-        theButtons.get(5).get(10).addActionListener(listener510);
+        theButtons.get(5).get(1).addActionListener(listener50);
+        theButtons.get(5).get(2).addActionListener(listener51);
+        theButtons.get(5).get(3).addActionListener(listener52);
+        theButtons.get(5).get(4).addActionListener(listener53);
+        theButtons.get(5).get(5).addActionListener(listener54);
+        theButtons.get(5).get(6).addActionListener(listener55);
+        theButtons.get(5).get(7).addActionListener(listener56);
+        theButtons.get(5).get(8).addActionListener(listener57);
+        theButtons.get(5).get(9).addActionListener(listener58);
+        theButtons.get(5).get(10).addActionListener(listener59);
+        theButtons.get(5).get(11).addActionListener(listener510);
 
-        theButtons.get(6).get(0).addActionListener(listener60);
-        theButtons.get(6).get(1).addActionListener(listener61);
-        theButtons.get(6).get(2).addActionListener(listener62);
-        theButtons.get(6).get(3).addActionListener(listener63);
-        theButtons.get(6).get(4).addActionListener(listener64);
-        theButtons.get(6).get(5).addActionListener(listener65);
-        theButtons.get(6).get(6).addActionListener(listener66);
-        theButtons.get(6).get(7).addActionListener(listener67);
-        theButtons.get(6).get(8).addActionListener(listener68);
-        theButtons.get(6).get(9).addActionListener(listener69);
-        theButtons.get(6).get(10).addActionListener(listener610);
+        theButtons.get(6).get(1).addActionListener(listener60);
+        theButtons.get(6).get(2).addActionListener(listener61);
+        theButtons.get(6).get(3).addActionListener(listener62);
+        theButtons.get(6).get(4).addActionListener(listener63);
+        theButtons.get(6).get(5).addActionListener(listener64);
+        theButtons.get(6).get(6).addActionListener(listener65);
+        theButtons.get(6).get(7).addActionListener(listener66);
+        theButtons.get(6).get(8).addActionListener(listener67);
+        theButtons.get(6).get(9).addActionListener(listener68);
+        theButtons.get(6).get(10).addActionListener(listener69);
+        theButtons.get(6).get(11).addActionListener(listener610);
 
-        theButtons.get(7).get(0).addActionListener(listener70);
-        theButtons.get(7).get(1).addActionListener(listener71);
-        theButtons.get(7).get(2).addActionListener(listener72);
-        theButtons.get(7).get(3).addActionListener(listener73);
-        theButtons.get(7).get(4).addActionListener(listener74);
-        theButtons.get(7).get(5).addActionListener(listener75);
-        theButtons.get(7).get(6).addActionListener(listener76);
-        theButtons.get(7).get(7).addActionListener(listener77);
-        theButtons.get(7).get(8).addActionListener(listener78);
-        theButtons.get(7).get(9).addActionListener(listener79);
-        theButtons.get(7).get(10).addActionListener(listener710);
+        theButtons.get(7).get(1).addActionListener(listener70);
+        theButtons.get(7).get(2).addActionListener(listener71);
+        theButtons.get(7).get(3).addActionListener(listener72);
+        theButtons.get(7).get(4).addActionListener(listener73);
+        theButtons.get(7).get(5).addActionListener(listener74);
+        theButtons.get(7).get(6).addActionListener(listener75);
+        theButtons.get(7).get(7).addActionListener(listener76);
+        theButtons.get(7).get(8).addActionListener(listener77);
+        theButtons.get(7).get(9).addActionListener(listener78);
+        theButtons.get(7).get(10).addActionListener(listener79);
+        theButtons.get(7).get(11).addActionListener(listener710);
 
-        theButtons.get(8).get(0).addActionListener(listener80);
-        theButtons.get(8).get(1).addActionListener(listener81);
-        theButtons.get(8).get(2).addActionListener(listener82);
-        theButtons.get(8).get(3).addActionListener(listener83);
-        theButtons.get(8).get(4).addActionListener(listener84);
-        theButtons.get(8).get(5).addActionListener(listener85);
-        theButtons.get(8).get(6).addActionListener(listener86);
-        theButtons.get(8).get(7).addActionListener(listener87);
-        theButtons.get(8).get(8).addActionListener(listener88);
-        theButtons.get(8).get(9).addActionListener(listener89);
-        theButtons.get(8).get(10).addActionListener(listener810);
+        theButtons.get(8).get(1).addActionListener(listener80);
+        theButtons.get(8).get(2).addActionListener(listener81);
+        theButtons.get(8).get(3).addActionListener(listener82);
+        theButtons.get(8).get(4).addActionListener(listener83);
+        theButtons.get(8).get(5).addActionListener(listener84);
+        theButtons.get(8).get(6).addActionListener(listener85);
+        theButtons.get(8).get(7).addActionListener(listener86);
+        theButtons.get(8).get(8).addActionListener(listener87);
+        theButtons.get(8).get(9).addActionListener(listener88);
+        theButtons.get(8).get(10).addActionListener(listener89);
+        theButtons.get(8).get(11).addActionListener(listener810);
 
-        theButtons.get(9).get(0).addActionListener(listener90);
-        theButtons.get(9).get(1).addActionListener(listener91);
-        theButtons.get(9).get(2).addActionListener(listener92);
-        theButtons.get(9).get(3).addActionListener(listener93);
-        theButtons.get(9).get(4).addActionListener(listener94);
-        theButtons.get(9).get(5).addActionListener(listener95);
-        theButtons.get(9).get(6).addActionListener(listener96);
-        theButtons.get(9).get(7).addActionListener(listener97);
-        theButtons.get(9).get(8).addActionListener(listener98);
-        theButtons.get(9).get(9).addActionListener(listener99);
-        theButtons.get(9).get(10).addActionListener(listener910);
+        theButtons.get(9).get(1).addActionListener(listener90);
+        theButtons.get(9).get(2).addActionListener(listener91);
+        theButtons.get(9).get(3).addActionListener(listener92);
+        theButtons.get(9).get(4).addActionListener(listener93);
+        theButtons.get(9).get(5).addActionListener(listener94);
+        theButtons.get(9).get(6).addActionListener(listener95);
+        theButtons.get(9).get(7).addActionListener(listener96);
+        theButtons.get(9).get(8).addActionListener(listener97);
+        theButtons.get(9).get(9).addActionListener(listener98);
+        theButtons.get(9).get(10).addActionListener(listener99);
+        theButtons.get(9).get(11).addActionListener(listener910);
 
-        theButtons.get(10).get(0).addActionListener(listener100);
-        theButtons.get(10).get(1).addActionListener(listener101);
-        theButtons.get(10).get(2).addActionListener(listener102);
-        theButtons.get(10).get(3).addActionListener(listener103);
-        theButtons.get(10).get(4).addActionListener(listener104);
-        theButtons.get(10).get(5).addActionListener(listener105);
-        theButtons.get(10).get(6).addActionListener(listener106);
-        theButtons.get(10).get(7).addActionListener(listener107);
-        theButtons.get(10).get(8).addActionListener(listener108);
-        theButtons.get(10).get(9).addActionListener(listener109);
-        theButtons.get(10).get(10).addActionListener(listener1010);
+        theButtons.get(10).get(1).addActionListener(listener100);
+        theButtons.get(10).get(2).addActionListener(listener101);
+        theButtons.get(10).get(3).addActionListener(listener102);
+        theButtons.get(10).get(4).addActionListener(listener103);
+        theButtons.get(10).get(5).addActionListener(listener104);
+        theButtons.get(10).get(6).addActionListener(listener105);
+        theButtons.get(10).get(7).addActionListener(listener106);
+        theButtons.get(10).get(8).addActionListener(listener107);
+        theButtons.get(10).get(9).addActionListener(listener108);
+        theButtons.get(10).get(10).addActionListener(listener109);
+        theButtons.get(10).get(11).addActionListener(listener1010);
     }
     /**
      * Update the board GUI dependent on the state of the Board object
      */
-    private void updateBoard()
+    public static void updateBoard()
     {
-        for(int rowsIdx = 0; rowsIdx < NUM_ROWS; ++rowsIdx)
+        for(int boardRowIdx = 0; boardRowIdx < NUM_ROWS; ++boardRowIdx)
         {
+            int guiRowIdx = NUM_ROWS - 1 - boardRowIdx;
+            //int boardRow = NUM_ROWS - guiRow - 1;
+            
             for(int colsIdx = 1; colsIdx < NUM_COLS + 1; ++colsIdx)
             {
-                javax.swing.JButton currButton = theButtons.get(rowsIdx).get(colsIdx);
-                Piece currPiece = theBoard.pieces[rowsIdx][colsIdx - 1];
+                javax.swing.JButton currButton = theButtons.get(boardRowIdx).get(colsIdx);
+                Piece currPiece = theBoard.pieces[guiRowIdx][colsIdx - 1];
                 
                 String symbol = "";
                 if(null != currPiece)
@@ -424,7 +454,7 @@ public class BoardGUI extends javax.swing.JFrame {
                 currButton.setText(symbol);
                 //currButton.setText(rowsIdx + "");
 
-                boolean isCorner = isBlackSquare(rowsIdx, colsIdx);
+                boolean isCorner = isBlackSquare(guiRowIdx, colsIdx);
                 if(isCorner)
                 {
                     currButton.setForeground(Color.white);
@@ -437,16 +467,19 @@ public class BoardGUI extends javax.swing.JFrame {
         }
     }
 
-    boolean isBlackSquare(int rowIdx, int colIdx)
+    static boolean isBlackSquare(int guiRowIdx, int colIdx)
     {
         boolean result = false;
         
-        if( (rowIdx == 0) && (colIdx == 0))
+        if( (guiRowIdx == 0) && ((colIdx == 1) || (colIdx == NUM_COLS)) )
         {
             result = true;
         }
-        else if( (rowIdx == NUM_ROWS /2 ) && 
-                 (colIdx == NUM_COLS /2 )  )
+        else if( (guiRowIdx == NUM_COLS -1) && ((colIdx == 1) || (colIdx == NUM_COLS)) )
+        {
+            result = true;
+        }
+        else if( (guiRowIdx == MIDDLE_IDX -1 ) && (colIdx == MIDDLE_IDX )  )
         {
             result = true;
         }
@@ -639,10 +672,11 @@ public class BoardGUI extends javax.swing.JFrame {
         */
     }
 
-    int NUM_ROWS = Board.NUM_ROWS;
-    int NUM_COLS = Board.NUM_COLS;
-    ArrayList<ArrayList<javax.swing.JButton>> theButtons;
-    Board theBoard;
+    static final int NUM_ROWS = Board.NUM_ROWS;
+    static final int NUM_COLS = Board.NUM_COLS;
+    static final int MIDDLE_IDX = 6;    
+    static ArrayList<ArrayList<javax.swing.JButton>> theButtons;
+    static Board theBoard;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
