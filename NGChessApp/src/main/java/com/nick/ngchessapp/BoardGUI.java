@@ -432,15 +432,17 @@ public class BoardGUI extends javax.swing.JFrame {
      */
     public static void updateBoard()
     {
-        for(int boardRowIdx = 0; boardRowIdx < NUM_ROWS; ++boardRowIdx)
+//        for(int boardRowIdx = 0; boardRowIdx < NUM_ROWS; ++boardRowIdx)
+        for(int guiRowIdx = 0; guiRowIdx < NUM_ROWS; ++guiRowIdx)
         {
-            int guiRowIdx = NUM_ROWS - 1 - boardRowIdx;
-            //int boardRow = NUM_ROWS - guiRow - 1;
+            //int guiRowIdx = NUM_ROWS - 1 - boardRowIdx;
+            int boardRowIdx = NUM_ROWS - guiRowIdx - 1;
             
-            for(int colsIdx = 1; colsIdx < NUM_COLS + 1; ++colsIdx)
+            for(int guiColsIdx = 1; guiColsIdx < NUM_COLS + 1; ++guiColsIdx)
             {
-                javax.swing.JButton currButton = theButtons.get(guiRowIdx).get(colsIdx);
-                Piece currPiece = theBoard.pieces[boardRowIdx][colsIdx + 1];
+                final int boardColsIdx = guiColsIdx - 1;
+                javax.swing.JButton currButton = theButtons.get(guiRowIdx).get(guiColsIdx);
+                Piece currPiece = theBoard.getPiece(boardColsIdx, boardRowIdx);
                 
                 String symbol = "";
                 if(null != currPiece)
@@ -448,11 +450,13 @@ public class BoardGUI extends javax.swing.JFrame {
                 switch (currPiece) {
                     case BLACK -> {
                         symbol = "B";
-                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid (" + boardRowIdx + ")(" + (colsIdx -1 ) + ") is " + currPiece);
+                        Square tempSq = new Square(boardColsIdx, boardRowIdx);
+                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid r(" + boardRowIdx + ")c(" + boardColsIdx + ") is " + currPiece + ", sq:" + tempSq);
                     }
                     case WHITE -> {
                         symbol = "W";
-                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid (" + boardRowIdx + ")(" + (colsIdx -1 ) + ") is " + currPiece);
+                        Square tempSq = new Square(boardColsIdx, boardRowIdx);
+                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid r(" + boardRowIdx + ")c(" + boardColsIdx + ") is " + currPiece + ", sq:" + tempSq);
                     }
                     case KING -> symbol = "K";
 //                    default -> {
@@ -463,7 +467,7 @@ public class BoardGUI extends javax.swing.JFrame {
                 currButton.setText(symbol);
                 //currButton.setText(rowsIdx + "");
 
-                boolean isCorner = isBlackSquare(guiRowIdx, colsIdx);
+                boolean isCorner = isBlackSquare(guiRowIdx, guiColsIdx);
                 if(isCorner)
                 {
                     currButton.setForeground(Color.white);

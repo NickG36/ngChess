@@ -169,6 +169,11 @@ public class Board {
        BoardUtils.recalcKingFreedomScore(this);
     }
     
+    public Piece getPiece(int col, int row)
+    {
+        return pieces[col][row];
+    }
+    
     public void removePiece(int col, int row)
     {
 //       System.out.println("In remove piece");
