@@ -15,9 +15,29 @@ import com.nick.movefinder.MovesRecord;
  * @author nick_
  */
 public class NGChessApp {
+interface ButtonPressedInterface{
+    void registerWhichButton();
+    //jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    //}                                        
 
+}
+
+    public static void buttonPressed(int row, int col)
+    {
+        
+    }
+    
+   /* public static void takesLambda((void)fnName(int, int))
+    {
+        fnName(1, 2);
+    }*/
     public static void main(String[] args) {
         System.out.println("In NG Chess App main");
+    
+        ButtonPressedInterface uses00 = () ->{buttonPressed(0,0);};
+        ButtonPressedInterface uses01 = () ->{buttonPressed(0,1);};
+        ButtonPressedInterface uses02 = () ->{buttonPressed(0,2);};
         
         Board theBoard = new Board();
         BoardRater boardRater = new BoardRater(); // New bit; ctor has side-effects

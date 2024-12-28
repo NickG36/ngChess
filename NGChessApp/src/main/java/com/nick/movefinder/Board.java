@@ -30,8 +30,8 @@ public class Board {
 	public int totBlackEndsOccupied;
 	public int totWhiteEndsOccupied;
 	   
-	   public Barricades()
-	   {
+	public Barricades()
+	{
          this.topLeft = new BarricadeOccupied();	
          this.topRight = new BarricadeOccupied();	
          this.bottomLeft = new BarricadeOccupied();	
@@ -41,10 +41,10 @@ public class Board {
          this.totWhiteCentresOccupied = 0;
          this.totBlackEndsOccupied = 0;
          this.totWhiteEndsOccupied = 0;
-	   }
+	}
 	   
-  	   public Barricades(final Barricades rhs)
-	   {
+  	public Barricades(final Barricades rhs)
+        {
          this.topLeft = new BarricadeOccupied(rhs.topLeft);	
          this.topRight = new BarricadeOccupied(rhs.topRight);	
          this.bottomLeft = new BarricadeOccupied(rhs.bottomLeft);	
@@ -54,9 +54,8 @@ public class Board {
          this.totWhiteCentresOccupied = rhs.totWhiteCentresOccupied;
          this.totBlackEndsOccupied = rhs.totBlackEndsOccupied;
          this.totWhiteEndsOccupied = rhs.totWhiteEndsOccupied;
-	   }
-
 	}
+    }
     
     public class BarricadeOccupied
     {

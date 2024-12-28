@@ -15,14 +15,49 @@ import java.util.Vector;
 
 import com.nick.movefinder.Board;
 import com.nick.movefinder.Board.Piece;
+import com.nick.movefinder.Square;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 
 /**
  *
  * @author nick_
  */
 public class BoardGUI extends javax.swing.JFrame {
+/*
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+    */
+    public class ButtonListener implements ActionListener
+    {
+        void buttonPressed(int guiRow, int col)
+        {
+            System.out.println("buttonPressed: row: " + guiRow + ", col:" + col + " pressed");
+            int boardRow = NUM_ROWS - guiRow - 1;
+            Square asSquare = new Square(col, boardRow);
+            fromText.setText(asSquare.toString() );
+        }
+        
+        public ButtonListener(int guiRow, int col)
+        {
+            this.guiRow = guiRow;
+            this.col = col;
+        }
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("action performed");
+            buttonPressed(this.guiRow, this.col);
+        }
+        private int guiRow;
+        private int col;
+    };
+    
     /**
      * Creates new form BoardGUI
      */
@@ -33,14 +68,14 @@ public class BoardGUI extends javax.swing.JFrame {
         
         theButtons = new ArrayList<>();
         
-        jPanel1.setLayout(new GridLayout(NUM_ROWS, NUM_COLS)); // Set GridLayout Manager
+        jPanel1.setLayout(new GridLayout(NUM_ROWS + 1, NUM_COLS + 1)); // Set GridLayout Manager
         
         final int SQUARE_SIZE = 60;
-        for(int rowsIdx = 0; rowsIdx < NUM_ROWS; ++rowsIdx)
+        for(int rowsIdx = 0; rowsIdx < NUM_ROWS + 1; ++rowsIdx)
         {
             ArrayList<javax.swing.JButton> theRow = new ArrayList<>();
             
-            for(int colsIdx = 0; colsIdx < NUM_COLS; ++colsIdx)
+            for(int colsIdx = 0; colsIdx < NUM_COLS + 1; ++colsIdx)
             {
                 javax.swing.JButton newButton = new javax.swing.JButton();
                 newButton.setBackground(new java.awt.Color(255, 255, 255));
@@ -49,28 +84,331 @@ public class BoardGUI extends javax.swing.JFrame {
                 newButton.setPreferredSize(preferredSize);
                 theRow.add(newButton);
                 jPanel1.add(newButton);
-                    
             }
             theButtons.add(theRow);
         }
         
-        theButtons.get(0).get(0).setBackground(BLACK_BACKGROUND);
-        theButtons.get(0).get(NUM_COLS - 1).setBackground(BLACK_BACKGROUND);
-        theButtons.get(NUM_ROWS/2).get(NUM_COLS/2).setBackground(BLACK_BACKGROUND);
-        theButtons.get(NUM_ROWS - 1).get(0).setBackground(BLACK_BACKGROUND);
-        theButtons.get(NUM_ROWS - 1).get(NUM_COLS - 1).setBackground(BLACK_BACKGROUND);
+        // Set the black square backgrounds
+        final int MIDDLE_IDX = 6;
+        theButtons.get(0).get(1).setBackground(BLACK_BACKGROUND);
+        theButtons.get(0).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
+        theButtons.get(MIDDLE_IDX-1).get(MIDDLE_IDX).setBackground(BLACK_BACKGROUND);
+        theButtons.get(NUM_ROWS-1).get(1).setBackground(BLACK_BACKGROUND);
+        theButtons.get(NUM_ROWS-1).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
+
+        // Set the grid label squares:
+        for(int colIdx = 1; colIdx < NUM_COLS + 1; ++colIdx)
+        {
+            JButton currButton = theButtons.get(NUM_ROWS).get(colIdx);
+            currButton.setBackground(Color.LIGHT_GRAY);
+            currButton.setEnabled(false);
+        }
+        
+        // Set the grid label squares:
+        for(int rowIdx = 0; rowIdx < NUM_ROWS + 1; ++rowIdx)
+        {
+            JButton currButton = theButtons.get(rowIdx).get(0);
+            currButton.setText( (NUM_ROWS - rowIdx) + "");
+            currButton.setBackground(Color.LIGHT_GRAY);
+            currButton.setEnabled(false);
+        }
+        
+        theButtons.get(NUM_ROWS).get(0).setText(" ");
+        theButtons.get(NUM_ROWS).get(1).setText("a");
+        theButtons.get(NUM_ROWS).get(2).setText("b");
+        theButtons.get(NUM_ROWS).get(3).setText("c");
+        theButtons.get(NUM_ROWS).get(4).setText("d");
+        theButtons.get(NUM_ROWS).get(5).setText("e");
+        theButtons.get(NUM_ROWS).get(6).setText("f");
+        theButtons.get(NUM_ROWS).get(7).setText("g");
+        theButtons.get(NUM_ROWS).get(8).setText("h");
+        theButtons.get(NUM_ROWS).get(9).setText("i");
+        theButtons.get(NUM_ROWS).get(10).setText("j");
+        theButtons.get(NUM_ROWS).get(11).setText("k");
+        
+        setupListeners();
         
         updateBoard();
     }
     
+    private void setupListeners()
+    {
+        // Indices here are wrt positions in theBoard button matrix
+        ButtonListener listener00 = new ButtonListener(0,0);
+        ButtonListener listener01 = new ButtonListener(0,1);
+        ButtonListener listener02 = new ButtonListener(0,2);
+        ButtonListener listener03 = new ButtonListener(0,3);
+        ButtonListener listener04 = new ButtonListener(0,4);
+        ButtonListener listener05 = new ButtonListener(0,5);
+        ButtonListener listener06 = new ButtonListener(0,6);
+        ButtonListener listener07 = new ButtonListener(0,7);
+        ButtonListener listener08 = new ButtonListener(0,8);
+        ButtonListener listener09 = new ButtonListener(0,9);
+        ButtonListener listener010 = new ButtonListener(0, 10);
+        
+        ButtonListener listener10 = new ButtonListener(1,0);
+        ButtonListener listener11 = new ButtonListener(1,1);
+        ButtonListener listener12 = new ButtonListener(1,2);
+        ButtonListener listener13 = new ButtonListener(1,3);
+        ButtonListener listener14 = new ButtonListener(1,4);
+        ButtonListener listener15 = new ButtonListener(1,5);
+        ButtonListener listener16 = new ButtonListener(1,6);
+        ButtonListener listener17 = new ButtonListener(1,7);
+        ButtonListener listener18 = new ButtonListener(1,8);
+        ButtonListener listener19 = new ButtonListener(1,9);
+        ButtonListener listener110 = new ButtonListener(1, 10);
+
+        ButtonListener listener20 = new ButtonListener(2,0);
+        ButtonListener listener21 = new ButtonListener(2,1);
+        ButtonListener listener22 = new ButtonListener(2,2);
+        ButtonListener listener23 = new ButtonListener(2,3);
+        ButtonListener listener24 = new ButtonListener(2,4);
+        ButtonListener listener25 = new ButtonListener(2,5);
+        ButtonListener listener26 = new ButtonListener(2,6);
+        ButtonListener listener27 = new ButtonListener(2,7);
+        ButtonListener listener28 = new ButtonListener(2,8);
+        ButtonListener listener29 = new ButtonListener(2,9);
+        ButtonListener listener210 = new ButtonListener(2, 10);
+
+        ButtonListener listener30 = new ButtonListener(3,0);
+        ButtonListener listener31 = new ButtonListener(3,1);
+        ButtonListener listener32 = new ButtonListener(3,2);
+        ButtonListener listener33 = new ButtonListener(3,3);
+        ButtonListener listener34 = new ButtonListener(3,4);
+        ButtonListener listener35 = new ButtonListener(3,5);
+        ButtonListener listener36 = new ButtonListener(3,6);
+        ButtonListener listener37 = new ButtonListener(3,7);
+        ButtonListener listener38 = new ButtonListener(3,8);
+        ButtonListener listener39 = new ButtonListener(3,9);
+        ButtonListener listener310 = new ButtonListener(3, 10);
+
+        ButtonListener listener40 = new ButtonListener(4,0);
+        ButtonListener listener41 = new ButtonListener(4,1);
+        ButtonListener listener42 = new ButtonListener(4,2);
+        ButtonListener listener43 = new ButtonListener(4,3);
+        ButtonListener listener44 = new ButtonListener(4,4);
+        ButtonListener listener45 = new ButtonListener(4,5);
+        ButtonListener listener46 = new ButtonListener(4,6);
+        ButtonListener listener47 = new ButtonListener(4,7);
+        ButtonListener listener48 = new ButtonListener(4,8);
+        ButtonListener listener49 = new ButtonListener(4,9);
+        ButtonListener listener410 = new ButtonListener(4, 10);
+
+        ButtonListener listener50 = new ButtonListener(5,0);
+        ButtonListener listener51 = new ButtonListener(5,1);
+        ButtonListener listener52 = new ButtonListener(5,2);
+        ButtonListener listener53 = new ButtonListener(5,3);
+        ButtonListener listener54 = new ButtonListener(5,4);
+        ButtonListener listener55 = new ButtonListener(5,5);
+        ButtonListener listener56 = new ButtonListener(5,6);
+        ButtonListener listener57 = new ButtonListener(5,7);
+        ButtonListener listener58 = new ButtonListener(5,8);
+        ButtonListener listener59 = new ButtonListener(5,9);
+        ButtonListener listener510 = new ButtonListener(5, 10);
+
+        ButtonListener listener60 = new ButtonListener(6,0);
+        ButtonListener listener61 = new ButtonListener(6,1);
+        ButtonListener listener62 = new ButtonListener(6,2);
+        ButtonListener listener63 = new ButtonListener(6,3);
+        ButtonListener listener64 = new ButtonListener(6,4);
+        ButtonListener listener65 = new ButtonListener(6,5);
+        ButtonListener listener66 = new ButtonListener(6,6);
+        ButtonListener listener67 = new ButtonListener(6,7);
+        ButtonListener listener68 = new ButtonListener(6,8);
+        ButtonListener listener69 = new ButtonListener(6,9);
+        ButtonListener listener610 = new ButtonListener(6, 10);
+
+        ButtonListener listener70 = new ButtonListener(7,0);
+        ButtonListener listener71 = new ButtonListener(7,1);
+        ButtonListener listener72 = new ButtonListener(7,2);
+        ButtonListener listener73 = new ButtonListener(7,3);
+        ButtonListener listener74 = new ButtonListener(7,4);
+        ButtonListener listener75 = new ButtonListener(7,5);
+        ButtonListener listener76 = new ButtonListener(7,6);
+        ButtonListener listener77 = new ButtonListener(7,7);
+        ButtonListener listener78 = new ButtonListener(7,8);
+        ButtonListener listener79 = new ButtonListener(7,9);
+        ButtonListener listener710 = new ButtonListener(7, 10);
+
+        ButtonListener listener80 = new ButtonListener(8,0);
+        ButtonListener listener81 = new ButtonListener(8,1);
+        ButtonListener listener82 = new ButtonListener(8,2);
+        ButtonListener listener83 = new ButtonListener(8,3);
+        ButtonListener listener84 = new ButtonListener(8,4);
+        ButtonListener listener85 = new ButtonListener(8,5);
+        ButtonListener listener86 = new ButtonListener(8,6);
+        ButtonListener listener87 = new ButtonListener(8,7);
+        ButtonListener listener88 = new ButtonListener(8,8);
+        ButtonListener listener89 = new ButtonListener(8,9);
+        ButtonListener listener810 = new ButtonListener(8, 10);
+
+        ButtonListener listener90 = new ButtonListener(9,0);
+        ButtonListener listener91 = new ButtonListener(9,1);
+        ButtonListener listener92 = new ButtonListener(9,2);
+        ButtonListener listener93 = new ButtonListener(9,3);
+        ButtonListener listener94 = new ButtonListener(9,4);
+        ButtonListener listener95 = new ButtonListener(9,5);
+        ButtonListener listener96 = new ButtonListener(9,6);
+        ButtonListener listener97 = new ButtonListener(9,7);
+        ButtonListener listener98 = new ButtonListener(9,8);
+        ButtonListener listener99 = new ButtonListener(9,9);
+        ButtonListener listener910 = new ButtonListener(9, 10);
+
+        ButtonListener listener100 = new ButtonListener(10,0);
+        ButtonListener listener101 = new ButtonListener(10,1);
+        ButtonListener listener102 = new ButtonListener(10,2);
+        ButtonListener listener103 = new ButtonListener(10,3);
+        ButtonListener listener104 = new ButtonListener(10,4);
+        ButtonListener listener105 = new ButtonListener(10,5);
+        ButtonListener listener106 = new ButtonListener(10,6);
+        ButtonListener listener107 = new ButtonListener(10,7);
+        ButtonListener listener108 = new ButtonListener(10,8);
+        ButtonListener listener109 = new ButtonListener(10,9);
+        ButtonListener listener1010 = new ButtonListener(10, 10);
+
+        theButtons.get(0).get(1).addActionListener(listener00);
+        theButtons.get(0).get(2).addActionListener(listener01);
+        theButtons.get(0).get(3).addActionListener(listener02);
+        theButtons.get(0).get(4).addActionListener(listener03);
+        theButtons.get(0).get(5).addActionListener(listener04);
+        theButtons.get(0).get(6).addActionListener(listener05);
+        theButtons.get(0).get(7).addActionListener(listener06);
+        theButtons.get(0).get(8).addActionListener(listener07);
+        theButtons.get(0).get(9).addActionListener(listener08);
+        theButtons.get(0).get(10).addActionListener(listener09);
+        theButtons.get(0).get(11).addActionListener(listener010);
+        
+        theButtons.get(1).get(0).addActionListener(listener10);
+        theButtons.get(1).get(1).addActionListener(listener11);
+        theButtons.get(1).get(2).addActionListener(listener12);
+        theButtons.get(1).get(3).addActionListener(listener13);
+        theButtons.get(1).get(4).addActionListener(listener14);
+        theButtons.get(1).get(5).addActionListener(listener15);
+        theButtons.get(1).get(6).addActionListener(listener16);
+        theButtons.get(1).get(7).addActionListener(listener17);
+        theButtons.get(1).get(8).addActionListener(listener18);
+        theButtons.get(1).get(9).addActionListener(listener19);
+        theButtons.get(1).get(10).addActionListener(listener110);
+
+        theButtons.get(2).get(0).addActionListener(listener20);
+        theButtons.get(2).get(1).addActionListener(listener21);
+        theButtons.get(2).get(2).addActionListener(listener22);
+        theButtons.get(2).get(3).addActionListener(listener23);
+        theButtons.get(2).get(4).addActionListener(listener24);
+        theButtons.get(2).get(5).addActionListener(listener25);
+        theButtons.get(2).get(6).addActionListener(listener26);
+        theButtons.get(2).get(7).addActionListener(listener27);
+        theButtons.get(2).get(8).addActionListener(listener28);
+        theButtons.get(2).get(9).addActionListener(listener29);
+        theButtons.get(2).get(10).addActionListener(listener210);
+
+        theButtons.get(3).get(0).addActionListener(listener30);
+        theButtons.get(3).get(1).addActionListener(listener31);
+        theButtons.get(3).get(2).addActionListener(listener32);
+        theButtons.get(3).get(3).addActionListener(listener33);
+        theButtons.get(3).get(4).addActionListener(listener34);
+        theButtons.get(3).get(5).addActionListener(listener35);
+        theButtons.get(3).get(6).addActionListener(listener36);
+        theButtons.get(3).get(7).addActionListener(listener37);
+        theButtons.get(3).get(8).addActionListener(listener38);
+        theButtons.get(3).get(9).addActionListener(listener39);
+        theButtons.get(3).get(10).addActionListener(listener310);
+
+        theButtons.get(4).get(0).addActionListener(listener40);
+        theButtons.get(4).get(1).addActionListener(listener41);
+        theButtons.get(4).get(2).addActionListener(listener42);
+        theButtons.get(4).get(3).addActionListener(listener43);
+        theButtons.get(4).get(4).addActionListener(listener44);
+        theButtons.get(4).get(5).addActionListener(listener45);
+        theButtons.get(4).get(6).addActionListener(listener46);
+        theButtons.get(4).get(7).addActionListener(listener47);
+        theButtons.get(4).get(8).addActionListener(listener48);
+        theButtons.get(4).get(9).addActionListener(listener49);
+        theButtons.get(4).get(10).addActionListener(listener410);
+
+        theButtons.get(5).get(0).addActionListener(listener50);
+        theButtons.get(5).get(1).addActionListener(listener51);
+        theButtons.get(5).get(2).addActionListener(listener52);
+        theButtons.get(5).get(3).addActionListener(listener53);
+        theButtons.get(5).get(4).addActionListener(listener54);
+        theButtons.get(5).get(5).addActionListener(listener55);
+        theButtons.get(5).get(6).addActionListener(listener56);
+        theButtons.get(5).get(7).addActionListener(listener57);
+        theButtons.get(5).get(8).addActionListener(listener58);
+        theButtons.get(5).get(9).addActionListener(listener59);
+        theButtons.get(5).get(10).addActionListener(listener510);
+
+        theButtons.get(6).get(0).addActionListener(listener60);
+        theButtons.get(6).get(1).addActionListener(listener61);
+        theButtons.get(6).get(2).addActionListener(listener62);
+        theButtons.get(6).get(3).addActionListener(listener63);
+        theButtons.get(6).get(4).addActionListener(listener64);
+        theButtons.get(6).get(5).addActionListener(listener65);
+        theButtons.get(6).get(6).addActionListener(listener66);
+        theButtons.get(6).get(7).addActionListener(listener67);
+        theButtons.get(6).get(8).addActionListener(listener68);
+        theButtons.get(6).get(9).addActionListener(listener69);
+        theButtons.get(6).get(10).addActionListener(listener610);
+
+        theButtons.get(7).get(0).addActionListener(listener70);
+        theButtons.get(7).get(1).addActionListener(listener71);
+        theButtons.get(7).get(2).addActionListener(listener72);
+        theButtons.get(7).get(3).addActionListener(listener73);
+        theButtons.get(7).get(4).addActionListener(listener74);
+        theButtons.get(7).get(5).addActionListener(listener75);
+        theButtons.get(7).get(6).addActionListener(listener76);
+        theButtons.get(7).get(7).addActionListener(listener77);
+        theButtons.get(7).get(8).addActionListener(listener78);
+        theButtons.get(7).get(9).addActionListener(listener79);
+        theButtons.get(7).get(10).addActionListener(listener710);
+
+        theButtons.get(8).get(0).addActionListener(listener80);
+        theButtons.get(8).get(1).addActionListener(listener81);
+        theButtons.get(8).get(2).addActionListener(listener82);
+        theButtons.get(8).get(3).addActionListener(listener83);
+        theButtons.get(8).get(4).addActionListener(listener84);
+        theButtons.get(8).get(5).addActionListener(listener85);
+        theButtons.get(8).get(6).addActionListener(listener86);
+        theButtons.get(8).get(7).addActionListener(listener87);
+        theButtons.get(8).get(8).addActionListener(listener88);
+        theButtons.get(8).get(9).addActionListener(listener89);
+        theButtons.get(8).get(10).addActionListener(listener810);
+
+        theButtons.get(9).get(0).addActionListener(listener90);
+        theButtons.get(9).get(1).addActionListener(listener91);
+        theButtons.get(9).get(2).addActionListener(listener92);
+        theButtons.get(9).get(3).addActionListener(listener93);
+        theButtons.get(9).get(4).addActionListener(listener94);
+        theButtons.get(9).get(5).addActionListener(listener95);
+        theButtons.get(9).get(6).addActionListener(listener96);
+        theButtons.get(9).get(7).addActionListener(listener97);
+        theButtons.get(9).get(8).addActionListener(listener98);
+        theButtons.get(9).get(9).addActionListener(listener99);
+        theButtons.get(9).get(10).addActionListener(listener910);
+
+        theButtons.get(10).get(0).addActionListener(listener100);
+        theButtons.get(10).get(1).addActionListener(listener101);
+        theButtons.get(10).get(2).addActionListener(listener102);
+        theButtons.get(10).get(3).addActionListener(listener103);
+        theButtons.get(10).get(4).addActionListener(listener104);
+        theButtons.get(10).get(5).addActionListener(listener105);
+        theButtons.get(10).get(6).addActionListener(listener106);
+        theButtons.get(10).get(7).addActionListener(listener107);
+        theButtons.get(10).get(8).addActionListener(listener108);
+        theButtons.get(10).get(9).addActionListener(listener109);
+        theButtons.get(10).get(10).addActionListener(listener1010);
+    }
+    /**
+     * Update the board GUI dependent on the state of the Board object
+     */
     private void updateBoard()
     {
         for(int rowsIdx = 0; rowsIdx < NUM_ROWS; ++rowsIdx)
         {
-            for(int colsIdx = 0; colsIdx < NUM_COLS; ++colsIdx)
+            for(int colsIdx = 1; colsIdx < NUM_COLS + 1; ++colsIdx)
             {
                 javax.swing.JButton currButton = theButtons.get(rowsIdx).get(colsIdx);
-                Piece currPiece = theBoard.pieces[rowsIdx][colsIdx];
+                Piece currPiece = theBoard.pieces[rowsIdx][colsIdx - 1];
                 
                 String symbol = "";
                 if(null != currPiece)
@@ -84,7 +422,8 @@ public class BoardGUI extends javax.swing.JFrame {
                 }
             
                 currButton.setText(symbol);
-            
+                //currButton.setText(rowsIdx + "");
+
                 boolean isCorner = isBlackSquare(rowsIdx, colsIdx);
                 if(isCorner)
                 {
@@ -129,6 +468,9 @@ public class BoardGUI extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        fromText = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -176,6 +518,17 @@ public class BoardGUI extends javax.swing.JFrame {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        fromText.setText("from");
+
+        jLabel1.setText("fromLbl");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -183,19 +536,29 @@ public class BoardGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(249, 249, 249)
-                        .addComponent(jToggleButton1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(249, 249, 249)
+                                .addComponent(jToggleButton1)
+                                .addGap(98, 98, 98)
+                                .addComponent(jButton1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(fromText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(72, 72, 72))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,15 +566,24 @@ public class BoardGUI extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
-                .addComponent(jToggleButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jToggleButton1)
+                    .addComponent(jButton1))
                 .addGap(63, 63, 63)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(694, Short.MAX_VALUE))
+                .addContainerGap(835, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fromText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(83, 83, 83))))
         );
 
         pack();
@@ -224,6 +596,10 @@ public class BoardGUI extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,6 +646,9 @@ public class BoardGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JTextField fromText;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
