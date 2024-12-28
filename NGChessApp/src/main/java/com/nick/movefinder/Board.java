@@ -84,7 +84,7 @@ public class Board {
     public int numWhitePieces = 12;
     public int kingFreedom = 0;
     
-    public boolean isBlackMove = true;
+    public boolean isBlackMove = false;
     
     public final static int COL_A = 0;
     public final static int COL_B = 1;
@@ -115,7 +115,7 @@ public class Board {
     public Board() {
        BoardUtils.setStartingBoard(this); 
 //        BoardUtils.setSmallBoard(this); 
-       //BoardUtils.setDebugBoard(this); 
+//       BoardUtils.setDebugBoard(this); 
     }
     
     public Board(final Board board)

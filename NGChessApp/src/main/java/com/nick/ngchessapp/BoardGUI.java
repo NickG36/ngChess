@@ -48,6 +48,7 @@ public class BoardGUI extends javax.swing.JFrame {
           		BoardUtils.makeMoveIfPossible(fromSquare, 
                                         asSquare,
                                         theBoard);     
+                System.out.println(theBoard);
       
                 if(!validMove)    
                 {
@@ -56,6 +57,7 @@ public class BoardGUI extends javax.swing.JFrame {
                 else
                 {
                     BoardGUI.updateBoard();
+//                    System.out.println(theBoard);
                 }
                 fromAlreadySelected = false;
             }
@@ -69,7 +71,6 @@ public class BoardGUI extends javax.swing.JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("action performed");
             buttonPressed(this.guiRow, this.col);
         }
         private int guiRow;
@@ -103,6 +104,7 @@ public class BoardGUI extends javax.swing.JFrame {
                 newButton.setForeground(Color.black);
                 Dimension preferredSize = new Dimension(SQUARE_SIZE, SQUARE_SIZE);
                 newButton.setPreferredSize(preferredSize);
+                newButton.setName("R" + rowsIdx + "C" + colsIdx);
                 theRow.add(newButton);
                 jPanel1.add(newButton);
 
@@ -437,18 +439,25 @@ public class BoardGUI extends javax.swing.JFrame {
             
             for(int colsIdx = 1; colsIdx < NUM_COLS + 1; ++colsIdx)
             {
-                javax.swing.JButton currButton = theButtons.get(boardRowIdx).get(colsIdx);
-                Piece currPiece = theBoard.pieces[guiRowIdx][colsIdx - 1];
+                javax.swing.JButton currButton = theButtons.get(guiRowIdx).get(colsIdx);
+                Piece currPiece = theBoard.pieces[boardRowIdx][colsIdx + 1];
                 
                 String symbol = "";
                 if(null != currPiece)
                     
                 switch (currPiece) {
-                    case BLACK -> symbol = "B";
-                    case WHITE -> symbol = "W";
-                    case KING -> symbol = "K";
-                    default -> {
+                    case BLACK -> {
+                        symbol = "B";
+                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid (" + boardRowIdx + ")(" + (colsIdx -1 ) + ") is " + currPiece);
                     }
+                    case WHITE -> {
+                        symbol = "W";
+                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid (" + boardRowIdx + ")(" + (colsIdx -1 ) + ") is " + currPiece);
+                    }
+                    case KING -> symbol = "K";
+//                    default -> {
+                    default -> symbol = currButton.getName(); 
+//                      }
                 }
             
                 currButton.setText(symbol);

@@ -756,8 +756,16 @@ public class BoardUtils {
     {
        Board.MovingDirn movingDirn = findMovingDirn(from, to);
        Board.Piece movingPiece = theBoard.pieces[from.col][from.row];
-       
-       if( (movingDirn == Board.MovingDirn.SAME) || (movingDirn == Board.MovingDirn.DIAGONAL))
+
+       if( ( (movingPiece == Board.Piece.BLACK) && !theBoard.isBlackMove))
+       {
+    	 System.out.println("***Invalid move - can't move black piece as it is white's move");
+       }
+       else if( ( (movingPiece == Board.Piece.WHITE) && theBoard.isBlackMove))
+       {
+    	 System.out.println("***Invalid move - can't move white piece as it is black's move");
+       }
+       else if( (movingDirn == Board.MovingDirn.SAME) || (movingDirn == Board.MovingDirn.DIAGONAL))
        {
     	 System.out.println("***Invalid move " + from + "->" + to + ", must move up, down, left or right");
          return false;
