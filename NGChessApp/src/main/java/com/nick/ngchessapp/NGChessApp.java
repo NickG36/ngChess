@@ -35,12 +35,12 @@ interface ButtonPressedInterface{
     public static void main(String[] args) {
         System.out.println("In NG Chess App main");
     
-        ButtonPressedInterface uses00 = () ->{buttonPressed(0,0);};
-        ButtonPressedInterface uses01 = () ->{buttonPressed(0,1);};
-        ButtonPressedInterface uses02 = () ->{buttonPressed(0,2);};
+        //ButtonPressedInterface uses00 = () ->{buttonPressed(0,0);};
+        //ButtonPressedInterface uses01 = () ->{buttonPressed(0,1);};
+        //ButtonPressedInterface uses02 = () ->{buttonPressed(0,2);};
         
-        Board theBoard = new Board();
-        BoardRater boardRater = new BoardRater(); // New bit; ctor has side-effects
+        //Board theBoard = new Board();
+        /*BoardRater boardRater = new BoardRater(); // New bit; ctor has side-effects
         MovesRecord gameMoves = new MovesRecord(true);
         MoveFinder moveFinder = new MoveFinder(theBoard);
 
@@ -48,8 +48,8 @@ interface ButtonPressedInterface{
         Controller controller = new Controller(theBoard,
                                                moveFinder,
                                                gameMoves);
-        
-        javax.swing.JFrame theFrame = new BoardGUI(theBoard);
+        */
+        javax.swing.JFrame theFrame = new BoardGUI();
         theFrame.setVisible(true);
     }
 }

@@ -44,10 +44,10 @@ public class Controller {
 
    private Move calculateMove() // throws java.lang.InterruptedException
    {
-	   System.out.println("In calculateMove");
+	System.out.println("In calculateMove");
 
-	   Square openingFrom = new Square();
-	   Square openingTo = new Square();
+	Square openingFrom = new Square();
+	Square openingTo = new Square();
 	   boolean openingFound = false;
 
 	   Move myNextMove = new Move();
@@ -155,8 +155,8 @@ public class Controller {
    }
 
    private void humanMove(Board board,
-		   				  Square opponentMoveFrom,
-		   				  Square opponentMoveTo)
+		   	  Square opponentMoveFrom,
+		   	  Square opponentMoveTo)
    {
        boolean humanEnteredValidMove = false;
        while(!humanEnteredValidMove)
@@ -203,6 +203,56 @@ public class Controller {
               whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
           }
        }
+   }
+
+   public boolean makeHumanMove(Square from, Square to)
+   {
+                System.out.println("human move: " + from + "->" + to);                
+                boolean validMove = 
+          		BoardUtils.makeMoveIfPossible(from, 
+                                        to,
+                                        theBoard);     
+                System.out.println(theBoard);
+      
+         if(stillInOpenings)
+         {                                  
+           if(iAmBlack)
+           {
+               blackOpenings.whiteMoveMade(from, to);    
+           }
+           else
+           {
+               whiteOpenings.blackMoveMade(from, to);    
+           }
+         }
+         return validMove;
+   }
+   public void makeComputerMove()
+   {
+    	 Move myMove = calculateMove();
+         System.out.println("I will play:" + myMove); 
+
+    	 BoardUtils.makeMoveIfPossible(myMove.from, myMove.to, theBoard);     
+
+    	 System.out.println("Posn after my move:\n" + theBoard); 
+         myMoves.add(myMove); 
+
+         checkForWin(theBoard);
+         
+        //  Square opponentMoveFrom = new Square();
+        //  Square opponentMoveTo = new Square();
+      
+         if(stillInOpenings)
+         {                                  
+           if(iAmBlack)
+           {
+               whiteOpenings.blackMoveMade(myMove.from, myMove.to);    
+           }
+           else
+           {
+               blackOpenings.whiteMoveMade(myMove.from, myMove.to);    
+           }
+         }
    }
    
    public void Go(boolean IAmBlack_param)
@@ -251,53 +301,6 @@ public class Controller {
          }
          
          humanMove(theBoard, opponentMoveFrom, opponentMoveTo);
-    	 /*
-         boolean humanEnteredValidMove = false;
-         while(!humanEnteredValidMove)
-         {
-        	 System.out.println("Enter move in format 'f4-f2':");
-        	 Scanner myObj = new Scanner(System.in); // Create a Scanner object
-
-        	 String userMove = myObj.nextLine(); // Read user input
-        	 System.out.println("Move is: " + userMove);            	
-        
-        	 boolean isOpponentMove = ParseInput(userMove, userMove.length(),
-                                                opponentMoveFrom, opponentMoveTo, theBoard.isBlackMove);
-            
-        	 if(!isOpponentMove)
-        	 {
-        		 System.out.println("***** Invalid turn - logic error");     
-        	 }
-              
-        	 boolean validMove = 
-            		BoardUtils.makeMoveIfPossible(opponentMoveFrom, 
-                                          opponentMoveTo,
-                                          theBoard);     
-        
-        	 if(!validMove)
-        	 {
-        		 System.out.println("***** Invalid move played");     
-        	 }
-        	 else
-        	 {
-        		 humanEnteredValidMove = true;
-        	 }
-         } // end while
-         
-         System.out.println("Posn after your move:\n" + theBoard); 
-         checkForWin(theBoard);
-         if(stillInOpenings)
-         {                                  
-            if(iAmBlack)
-            {
-                blackOpenings.whiteMoveMade(opponentMoveFrom, opponentMoveTo);    
-            }
-            else
-            {
-                whiteOpenings.blackMoveMade(opponentMoveFrom, opponentMoveTo);    
-            }
-          }
-          */
       } // end for ever
    }   
    

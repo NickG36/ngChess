@@ -49,19 +49,6 @@ System.out.println("Playing as black");
 //      
 System.out.println("In ShallowBlue main");
 
-     //System.out.println("Will create sockets to host : " + host + ", Tx port " + TxPortNumber +
-     //                                                  ", Rx port " + RxPortNumber);
-//     boolean connectionMade = false;
-     
-//System.out.println("Using host:" + host);
-
-       //DatagramSocket receiving_dsocket = new DatagramSocket(RxPortNumber);
-       //DatagramSocket sending_dsocket = new DatagramSocket();
-           
-       //InetAddress board_address = performHandshake(sending_dsocket, receiving_dsocket, I_Am_Black, TxPortNumber);
-           
-       //System.out.println("Have left performHandshake");
-
        Board theBoard = new Board();
        BoardRater boardRater = new BoardRater(); // New bit; ctor has side-effects
        MovesRecord gameMoves = new MovesRecord(true);
@@ -71,9 +58,6 @@ System.out.println("In ShallowBlue main");
        Controller controller = new Controller(theBoard,
                                               moveFinder,
                                               gameMoves);
-                                              //sending_dsocket, receiving_dsocket,
-                                              //board_address,
-                                              //TxPortNumber);
      
        controller.Go(I_Am_Black);
 System.out.println("Exiting ShallowBlue.");

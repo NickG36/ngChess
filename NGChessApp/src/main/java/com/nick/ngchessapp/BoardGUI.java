@@ -15,7 +15,11 @@ import java.util.Vector;
 
 import com.nick.movefinder.Board;
 import com.nick.movefinder.Board.Piece;
+import com.nick.movefinder.BoardRater;
 import com.nick.movefinder.BoardUtils;
+import com.nick.movefinder.Controller;
+import com.nick.movefinder.MoveFinder;
+import com.nick.movefinder.MovesRecord;
 import com.nick.movefinder.Square;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -32,7 +36,7 @@ public class BoardGUI extends javax.swing.JFrame {
     {
         void buttonPressed(int guiRow, int col)
         {
-            System.out.println("buttonPressed: row: " + guiRow + ", col:" + col + " pressed");
+            //System.out.println("buttonPressed: row: " + guiRow + ", col:" + col + " pressed");
             int boardRow = NUM_ROWS - guiRow - 1;
             Square asSquare = new Square(col, boardRow);
             
@@ -44,10 +48,11 @@ public class BoardGUI extends javax.swing.JFrame {
             }
             else
             {
-                boolean validMove = 
-          		BoardUtils.makeMoveIfPossible(fromSquare, 
+                System.out.println("human move: " + fromSquare + "->" + asSquare);                
+                boolean validMove = controller.makeHumanMove(fromSquare, asSquare);
+/*          		BoardUtils.makeMoveIfPossible(fromSquare, 
                                         asSquare,
-                                        theBoard);     
+                                        theBoard);     */
                 System.out.println(theBoard);
       
                 if(!validMove)    
@@ -57,7 +62,11 @@ public class BoardGUI extends javax.swing.JFrame {
                 else
                 {
                     BoardGUI.updateBoard();
-//                    System.out.println(theBoard);
+                    
+                    // Computer's move
+                    controller.makeComputerMove();
+                    System.out.println(theBoard);
+                    BoardGUI.updateBoard();
                 }
                 fromAlreadySelected = false;
             }
@@ -83,7 +92,17 @@ public class BoardGUI extends javax.swing.JFrame {
     /**
      * Creates new form BoardGUI
      */
-    public BoardGUI(Board theBoard) {
+    public BoardGUI(/*Board theBoard*/) {
+       this.theBoard = new Board();
+       BoardRater boardRater = new BoardRater(); // New bit; ctor has side-effects
+       MovesRecord gameMoves = new MovesRecord(true);
+       MoveFinder moveFinder = new MoveFinder(theBoard);
+
+       System.out.println("Start:" + theBoard);
+       controller = new Controller(theBoard,
+                                              moveFinder,
+                                              gameMoves);
+        
         this.theBoard = theBoard;
         initComponents();
         final java.awt.Color BLACK_BACKGROUND = new java.awt.Color(0, 0, 0);
@@ -117,14 +136,6 @@ public class BoardGUI extends javax.swing.JFrame {
             theButtons.add(theRow);
         }
         
-        // Set the black square backgrounds
-        /*final int MIDDLE_IDX = 6;
-        theButtons.get(0).get(1).setBackground(BLACK_BACKGROUND);
-        theButtons.get(0).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
-        theButtons.get(MIDDLE_IDX-1).get(MIDDLE_IDX).setBackground(BLACK_BACKGROUND);
-        theButtons.get(NUM_ROWS-1).get(1).setBackground(BLACK_BACKGROUND);
-        theButtons.get(NUM_ROWS-1).get(NUM_COLS).setBackground(BLACK_BACKGROUND);
-*/
         // Set the grid label squares:
         for(int colIdx = 1; colIdx < NUM_COLS + 1; ++colIdx)
         {
@@ -432,10 +443,8 @@ public class BoardGUI extends javax.swing.JFrame {
      */
     public static void updateBoard()
     {
-//        for(int boardRowIdx = 0; boardRowIdx < NUM_ROWS; ++boardRowIdx)
         for(int guiRowIdx = 0; guiRowIdx < NUM_ROWS; ++guiRowIdx)
         {
-            //int guiRowIdx = NUM_ROWS - 1 - boardRowIdx;
             int boardRowIdx = NUM_ROWS - guiRowIdx - 1;
             
             for(int guiColsIdx = 1; guiColsIdx < NUM_COLS + 1; ++guiColsIdx)
@@ -450,22 +459,16 @@ public class BoardGUI extends javax.swing.JFrame {
                 switch (currPiece) {
                     case BLACK -> {
                         symbol = "B";
-                        Square tempSq = new Square(boardColsIdx, boardRowIdx);
-                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid r(" + boardRowIdx + ")c(" + boardColsIdx + ") is " + currPiece + ", sq:" + tempSq);
                     }
                     case WHITE -> {
                         symbol = "W";
-                        Square tempSq = new Square(boardColsIdx, boardRowIdx);
-                        System.out.println("Setting " + currButton.getName() + " to " + symbol + " because grid r(" + boardRowIdx + ")c(" + boardColsIdx + ") is " + currPiece + ", sq:" + tempSq);
                     }
                     case KING -> symbol = "K";
-//                    default -> {
-                    default -> symbol = currButton.getName(); 
-//                      }
+                    default -> {
+                      }
                 }
             
                 currButton.setText(symbol);
-                //currButton.setText(rowsIdx + "");
 
                 boolean isCorner = isBlackSquare(guiRowIdx, guiColsIdx);
                 if(isCorner)
@@ -690,6 +693,7 @@ public class BoardGUI extends javax.swing.JFrame {
     static final int MIDDLE_IDX = 6;    
     static ArrayList<ArrayList<javax.swing.JButton>> theButtons;
     static Board theBoard;
+    static Controller controller;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
